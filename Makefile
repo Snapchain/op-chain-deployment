@@ -5,6 +5,7 @@ export GOPATH := $(HOME)/go
 # Add Foundry the PATH
 # TODO: why is just in the path?
 export PATH := $(HOME)/.just:$(HOME)/.foundry/bin:/usr/local/go/bin:$(GOPATH)/bin:$(PATH)
+# makes all variables in the Makefile available to child processes
 export
 
 DOCKER := $(shell which docker)
