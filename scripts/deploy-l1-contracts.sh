@@ -8,7 +8,7 @@ OP_CONTRACTS_DIR=$OP_DIR/packages/contracts-bedrock
 echo "OP_CONTRACTS_DIR: $OP_CONTRACTS_DIR"
 cd $OP_CONTRACTS_DIR
 
-Install contracts dependencies
+# Install contracts dependencies
 echo "Installing the dependencies for the smart contracts..."
 just install
 echo
