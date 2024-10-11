@@ -109,4 +109,3 @@ volumes:
 
 networks:
   ops-bedrock_default:
-    external: true
