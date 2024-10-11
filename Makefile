@@ -17,7 +17,7 @@ prepare-op-chain:
 	$(eval include $(CURDIR)/.env)
 	@$(CURDIR)/scripts/generate-deploy-config.sh $(CURDIR)/optimism
 	@$(CURDIR)/scripts/deploy-l1-contracts.sh $(CURDIR)/optimism
-	@$(CURDIR)/scripts/generate-l2-config.sh $(CURDIR)/optimism $(CURDIR)/optimism
+	@$(CURDIR)/scripts/generate-l2-config.sh $(CURDIR)/optimism
 .PHONY: prepare-op-chain
 
 ## Common logic for starting/restarting OP chain on Sepolia
