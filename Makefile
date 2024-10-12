@@ -28,3 +28,8 @@ _launch-op-chain:
 	@$(CURDIR)/scripts/verify-op-devnet.sh false
 .PHONY: _launch-op-chain
 
+## Launch a local L1 chain with kurtosis and ethereum-package
+kurtosis-launch-l1:
+	$(eval include $(CURDIR)/.env)
+	@kurtosis run --enclave $(KURTOSIS_LOCAL_L1_ENCLAVE_NAME) github.com/ethpandaops/ethereum-package --args-file $(KURTOSIS_LOCAL_L1_ARGS_FILE)
+.PHONY: kurtosis-launch-l1
