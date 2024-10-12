@@ -48,3 +48,8 @@ kurtosis-launch-l1:
 kurtosis-remove-l1:
 	@kurtosis enclave rm -f $(KURTOSIS_LOCAL_L1_ENCLAVE_NAME)
 .PHONY: kurtosis-remove-l1
+
+## Generate addresses
+generate-addresses:
+	@$(CURDIR)/optimism/packages/contracts-bedrock/scripts/getting-started/wallets.sh
+.PHONY: generate-addresses
