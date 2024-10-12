@@ -2,6 +2,7 @@
 set -euo pipefail
 
 # Create deployment directory that will hold configuration files
+OP_DEPLOY_DIR=$2
 mkdir -p ${OP_DEPLOY_DIR} && chmod -R 777 ${OP_DEPLOY_DIR}
 
 L2_ALLOCS_OUTFILE=${OP_DEPLOY_DIR}/l2-allocs.json
@@ -19,7 +20,8 @@ cd $OP_CONTRACTS_DIR
 # Dump the L2 genesis allocs (aka "state dump")
 echo "Dumping the L2 genesis allocs..."
 CONTRACT_ADDRESSES_PATH=${DEPLOYMENT_OUTFILE} \
-STATE_DUMP_PATH=${L2_ALLOCS_OUTFILE} \
+  STATE_DUMP_PATH=${L2_ALLOCS_OUTFILE} \
+  DEPLOY_CONFIG_PATH=${DEPLOY_CONFIG_PATH} \
   forge script $OP_CONTRACTS_DIR/scripts/L2Genesis.s.sol:L2Genesis \
   --sig 'runWithStateDump()'
 echo "L2 genesis allocs dumped at ${L2_ALLOCS_OUTFILE}"
