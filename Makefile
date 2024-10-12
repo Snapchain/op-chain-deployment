@@ -6,9 +6,9 @@ export PATH := $(HOME)/.just:$(HOME)/.foundry/bin:/usr/local/go/bin:$(GOPATH)/bi
 # makes all variables in the Makefile available to child processes
 export
 
-DOCKER := $(shell which docker)
-# TODO: we can just use $(CURDIR) instead of this
-GIT_TOPLEVEL := $(shell git rev-parse --show-toplevel)
+# Kurtosis local L1
+KURTOSIS_LOCAL_L1_ENCLAVE_NAME=kurtosis-local-l1
+KURTOSIS_LOCAL_L1_ARGS_FILE=configs/network_params.yaml
 
 ## Prepare for running the OP chain on the Sepolia testnet
 prepare-op-chain:
