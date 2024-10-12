@@ -3,3 +3,11 @@ participants:
     cl_type: lighthouse
 network_params:
   preset: minimal
+  network_id: "11155222"
+port_publisher:
+  el:
+    enabled: true
+    public_port_start: 18543
+  cl:
+    enabled: true
+    public_port_start: 15051
