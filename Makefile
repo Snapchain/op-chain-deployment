@@ -33,7 +33,7 @@ verify-op-devnet:
 .PHONY: verify-op-devnet
 
 ## Start the OP chain on the Sepolia testnet
-start-op-chain-sepolia: prepare-op-chain _launch-op-chain-sepolia
+start-op-chain-sepolia: prepare-op-chain _launch-op-chain
 .PHONY: start-op-chain-sepolia
 
 ## Launch a local L1 chain with kurtosis and ethereum-package
