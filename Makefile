@@ -46,12 +46,16 @@ l1-launch:
 	$(eval include $(CURDIR)/.env)
 	@kurtosis run --enclave $(KURTOSIS_LOCAL_L1_ENCLAVE_NAME) github.com/ethpandaops/ethereum-package --args-file $(KURTOSIS_LOCAL_L1_ARGS_FILE)
 	sleep 45
-	@$(CURDIR)/scripts/verify-l1-kurtosis.sh $(KURTOSIS_LOCAL_L1_ARGS_FILE)
+	@$(MAKE) l1-verify
 .PHONY: l1-launch
 
 l1-configure:
 	@$(CURDIR)/scripts/l1-configure.sh
 .PHONY: l1-configure
+
+l1-verify:
+	@$(CURDIR)/scripts/l1-verify.sh $(KURTOSIS_LOCAL_L1_ARGS_FILE)
+.PHONY: l1-verify
 
 ## Remove the local L1 chain
 l1-remove:
