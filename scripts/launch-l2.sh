@@ -1,18 +1,31 @@
 #!/bin/bash
 set -euo pipefail
 
-OP_DIR=$1
+wait_up() {
+    local port=$1
+    local retries=10
+    local wait_time=1
 
-# Directory of the script file, independent of where it's called from.
-SCRIPTS_DIR="$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)"
-source $SCRIPTS_DIR/utils.sh
+    for i in $(seq 1 $retries); do
+        if nc -z localhost $port; then
+            echo "Port $port is available"
+            return 0
+        fi
+        echo "Attempt $i: Port $port is not available yet. Waiting $wait_time seconds..."
+        sleep $wait_time
+    done
+
+    echo "Error: Port $port did not become available after $retries attempts"
+    return 1
+}
 
 # set the needed environment variable
 echo "Setting the needed environment variable..."
+DEPLOYMENT_OUTFILE=$1/packages/contracts-bedrock/deployments/sepolia-devnet-${L2_CHAIN_ID}.json
 if [ "$DEVNET_L2OO" = true ]; then
-  export L2OO_ADDRESS=$(jq -r .L2OutputOracleProxy < $OP_DIR/packages/contracts-bedrock/deployments/sepolia-devnet-${L2_CHAIN_ID}.json)
+  export L2OO_ADDRESS=$(jq -r .L2OutputOracleProxy < ${DEPLOYMENT_OUTFILE})
 else
-  export DGF_ADDRESS=$(jq -r .DisputeGameFactoryProxy < $OP_DIR/packages/contracts-bedrock/deployments/sepolia-devnet-${L2_CHAIN_ID}.json)
+  export DGF_ADDRESS=$(jq -r .DisputeGameFactoryProxy < ${DEPLOYMENT_OUTFILE})
   # these two values are from the bedrock-devnet
   export DG_TYPE=254
   export PROPOSAL_INTERVAL=12s

@@ -1,14 +1,11 @@
 #!/bin/bash
 set -euo pipefail
 
-OP_DIR=$1
-# TODO: should we use a top-level deploy-config directory instead of inside the submodule?
-DEPLOY_CONFIG_PATH=${OP_DIR}/packages/contracts-bedrock/deploy-config
-
 # Run the Optimism Monorepo's config.sh script
 # which will generate the getting-started.json configuration file
 echo "Generating deployment configuration for OP L2..."
-${OP_DIR}/packages/contracts-bedrock/scripts/getting-started/config.sh
+OP_CONTRACTS_DIR=$1/packages/contracts-bedrock
+${OP_CONTRACTS_DIR}/scripts/getting-started/config.sh
 # Check if the config.sh script failed
 if [ $? -ne 0 ]; then
     echo "Failed to run config.sh script"
@@ -26,9 +23,9 @@ else
 fi
 
 # Create the config file with the additional fields, e.g. useFaultProofs
-GETTING_STARTED_OUTFILE=${DEPLOY_CONFIG_PATH}/getting-started.json
-DEPLOY_CONFIG_OUTFILE=${DEPLOY_CONFIG_PATH}/sepolia-devnet-${L2_CHAIN_ID}.json
-jq ".useFaultProofs = ${USE_FAULT_PROOFS}" ${GETTING_STARTED_OUTFILE} > ${DEPLOY_CONFIG_OUTFILE}
+GETTING_STARTED_OUTFILE=${OP_CONTRACTS_DIR}/deploy-config/getting-started.json
+DEPLOY_CONFIG_PATH=${OP_CONTRACTS_DIR}/deploy-config/sepolia-devnet-${L2_CHAIN_ID}.json
+jq ".useFaultProofs = ${USE_FAULT_PROOFS}" ${GETTING_STARTED_OUTFILE} > ${DEPLOY_CONFIG_PATH}
 rm ${GETTING_STARTED_OUTFILE}
-echo "Deployment configuration generated at ${DEPLOY_CONFIG_OUTFILE}"
+echo "Deployment configuration generated at ${DEPLOY_CONFIG_PATH}"
 echo

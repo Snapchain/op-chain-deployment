@@ -32,6 +32,11 @@ verify-op-devnet:
 	@$(CURDIR)/scripts/verify-op-devnet.sh false
 .PHONY: verify-op-devnet
 
+## Clean up the deployment directory
+clean-deploy-dir:
+	@rm -rf $(CURDIR)/.deploy
+.PHONY: clean-deploy-dir
+
 ## Start the OP chain on the Sepolia testnet
 start-op-chain-sepolia: prepare-op-chain _launch-op-chain
 .PHONY: start-op-chain-sepolia
