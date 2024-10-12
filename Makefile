@@ -28,6 +28,14 @@ _launch-op-chain:
 	@$(CURDIR)/scripts/verify-op-devnet.sh false
 .PHONY: _launch-op-chain
 
+verify-op-devnet:
+	@$(CURDIR)/scripts/verify-op-devnet.sh false
+.PHONY: verify-op-devnet
+
+## Start the OP chain on the Sepolia testnet
+start-op-chain-sepolia: prepare-op-chain _launch-op-chain-sepolia
+.PHONY: start-op-chain-sepolia
+
 ## Launch a local L1 chain with kurtosis and ethereum-package
 kurtosis-launch-l1:
 	$(eval include $(CURDIR)/.env)

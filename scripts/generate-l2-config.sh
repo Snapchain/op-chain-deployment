@@ -1,8 +1,10 @@
 #!/bin/bash
 set -euo pipefail
 
+
 OP_DIR=$1
-OP_DEPLOY_DIR=$2/.deploy
+SCRIPTS_DIR="$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)"
+OP_DEPLOY_DIR=./.deploy
 DEPLOY_CONFIG_PATH=${OP_DIR}/packages/contracts-bedrock/deploy-config/sepolia-devnet-${L2_CHAIN_ID}.json
 DEPLOYMENT_OUTFILE=${OP_DIR}/packages/contracts-bedrock/deployments/sepolia-devnet-${L2_CHAIN_ID}.json
 L2_ALLOCS_OUTFILE=${OP_DEPLOY_DIR}/l2-allocs.json
