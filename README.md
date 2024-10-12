@@ -28,21 +28,21 @@ Copy the the addresses generated in the [Generate addresses](#generate-addresses
 ### Setup the network parameters
 
 ```
-cp configs/network_params.yaml.example configs/network_params.yaml
+make l1-configure
 ```
 
-Update the `prefunded_accounts` section in the `configs/network_params.yaml` file with the addresses generated in the [Generate addresses](#generate-addresses) section.
+**Note:** It will generate a new wallet `configs/l1-prefund-wallet.json` and update the `configs/network_params.yaml` file with the address to use for the prefunded account. You can update the `configs/network_params.yaml` file manually to use an existing wallet.
 
 ### Launch with kurtosis and ethereum-package
 
 ```
-make kurtosis-launch-l1
+make l1-launch
 ```
 
 ### Remove the local L1 chain
 
 ```
-make kurtosis-remove-l1
+make l1-remove
 ```
 
 **Note:** If you launch the local L1 chain with kurtosis, you must set the following environment variables with the values from the `configs/network_params_geth_lighthouse.yaml` file:
