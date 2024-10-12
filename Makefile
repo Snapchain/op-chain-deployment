@@ -42,12 +42,16 @@ start-op-chain-sepolia: prepare-op-chain _launch-op-chain
 .PHONY: start-op-chain-sepolia
 
 ## Launch a local L1 chain with kurtosis and ethereum-package
-kurtosis-launch-l1:
+kurtosis-launch-l1: configure-l1-network-params
 	$(eval include $(CURDIR)/.env)
 	@kurtosis run --enclave $(KURTOSIS_LOCAL_L1_ENCLAVE_NAME) github.com/ethpandaops/ethereum-package --args-file $(KURTOSIS_LOCAL_L1_ARGS_FILE)
 	sleep 45
 	@$(CURDIR)/scripts/verify-l1-kurtosis.sh $(KURTOSIS_LOCAL_L1_ARGS_FILE)
 .PHONY: kurtosis-launch-l1
+
+configure-l1-network-params:
+	@$(CURDIR)/scripts/configure-l1-network-params.sh
+.PHONY: configure-l1-network-params
 
 ## Remove the local L1 chain
 kurtosis-remove-l1:
