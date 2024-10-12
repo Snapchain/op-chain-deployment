@@ -4,8 +4,7 @@ set -euo pipefail
 ROOT_DIR=$(pwd)
 OP_DIR=$1
 SCRIPTS_DIR="$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)"
-OP_DEPLOY_DIR=${ROOT_DIR}/optimism/.deploy
-cp -R ${OP_DEPLOY_DIR} ${ROOT_DIR}/.deploy
+OP_DEPLOY_DIR=${ROOT_DIR}/.deploy
 DEPLOY_CONFIG_PATH=${OP_DIR}/packages/contracts-bedrock/deploy-config/sepolia-devnet-${L2_CHAIN_ID}.json
 DEPLOYMENT_OUTFILE=${OP_DIR}/packages/contracts-bedrock/deployments/sepolia-devnet-${L2_CHAIN_ID}.json
 L2_ALLOCS_OUTFILE=${OP_DEPLOY_DIR}/l2-allocs.json
