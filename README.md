@@ -1,12 +1,37 @@
 # OP Chain Deployment
 
+
 ## Setup environment variables
 
 ```
 cp .env.example .env
 ```
 
+### Fetch and update the submodules
+
+```
+git submodule update --init --recursive
+```
+
+### Generate addresses
+
+```
+make generate-addresses
+```
+
+### Update the environment variables
+
+Copy the the addresses generated in the [Generate addresses](#generate-addresses) section and update the `.env` file with them.
+
 ## Local L1 chain
+
+### Setup the network parameters
+
+```
+cp configs/network_params.yaml.example configs/network_params.yaml
+```
+
+Update the `prefunded_accounts` section in the `configs/network_params.yaml` file with the addresses generated in the [Generate addresses](#generate-addresses) section.
 
 ### Launch with kurtosis and ethereum-package
 

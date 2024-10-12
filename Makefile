@@ -17,7 +17,7 @@ prepare-op-chain:
 	$(eval include $(CURDIR)/.env)
 	@$(CURDIR)/scripts/generate-deploy-config.sh $(CURDIR)/optimism
 	@$(CURDIR)/scripts/deploy-l1-contracts.sh $(CURDIR)/optimism
-	@$(CURDIR)/scripts/generate-l2-config.sh $(CURDIR)/optimism
+	@$(CURDIR)/scripts/generate-l2-config.sh $(CURDIR)/optimism $(CURDIR)/.deploy
 .PHONY: prepare-op-chain
 
 ## Common logic for starting/restarting OP chain on Sepolia
@@ -31,6 +31,11 @@ _launch-op-chain:
 verify-op-devnet:
 	@$(CURDIR)/scripts/verify-op-devnet.sh false
 .PHONY: verify-op-devnet
+
+## Clean up the deployment directory
+clean-deploy-dir:
+	@rm -rf $(CURDIR)/.deploy
+.PHONY: clean-deploy-dir
 
 ## Start the OP chain on the Sepolia testnet
 start-op-chain-sepolia: prepare-op-chain _launch-op-chain
@@ -48,3 +53,8 @@ kurtosis-launch-l1:
 kurtosis-remove-l1:
 	@kurtosis enclave rm -f $(KURTOSIS_LOCAL_L1_ENCLAVE_NAME)
 .PHONY: kurtosis-remove-l1
+
+## Generate addresses
+generate-addresses:
+	@$(CURDIR)/optimism/packages/contracts-bedrock/scripts/getting-started/wallets.sh
+.PHONY: generate-addresses

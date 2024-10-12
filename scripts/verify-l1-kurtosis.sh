@@ -7,6 +7,10 @@ NETWORK_ID=$(yq '.network_params.network_id' "$YAML_FILE" | tr -d '"')
 EL_PORT_START=$(yq '.port_publisher.el.public_port_start' "$YAML_FILE")
 CL_PORT_START=$(yq '.port_publisher.cl.public_port_start' "$YAML_FILE")
 
+# Extract prefunded addresses
+PREFUNDED_ACCOUNTS=$(yq -r '.network_params.prefunded_accounts' "$YAML_FILE" | jq -r 'keys[]')
+readarray -t PREFUNDED_ACCOUNTS_ARRAY <<< "$PREFUNDED_ACCOUNTS"
+
 # Calculate the actual ports
 L1_RPC_PORT=$((EL_PORT_START + 2))
 L1_BEACON_PORT=$((CL_PORT_START + 1))
@@ -56,5 +60,15 @@ LATEST_BLOCK=$(curl -s -X POST -H "Content-Type: application/json" \
     $L1_RPC_URL | jq -r '.result')
 
 echo "Latest block number: $((16#${LATEST_BLOCK#0x}))"
+
+# Check the balance of the prefunded accounts
+echo "Checking the balance of the prefunded accounts..."
+for ACCOUNT in "${PREFUNDED_ACCOUNTS_ARRAY[@]}"; do
+    ETH_BALANCE_WEI=$(curl -s -X POST -H "Content-Type: application/json" \
+        -d '{"jsonrpc":"2.0","method":"eth_getBalance","params":["'$ACCOUNT'", "latest"],"id":1}' \
+        $L1_RPC_URL | jq -r '.result')
+    ETH_BALANCE=$(echo "$ETH_BALANCE_WEI" | awk '{ printf "%.18f", $1 / (10^18) }')
+    echo "Balance of $ACCOUNT: $ETH_BALANCE ETH"
+done
 
 echo "L1 chain is running and operational"
