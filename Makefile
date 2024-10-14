@@ -37,9 +37,9 @@ clean-deploy-dir:
 	@rm -rf $(CURDIR)/.deploy
 .PHONY: clean-deploy-dir
 
-## Start the OP chain on the Sepolia testnet
-start-op-chain-sepolia: prepare-op-chain _launch-op-chain
-.PHONY: start-op-chain-sepolia
+## Start the OP chain
+start-op-chain: prepare-op-chain _launch-op-chain
+.PHONY: start-op-chain
 
 ## Launch a local L1 chain with kurtosis and ethereum-package
 l1-launch:
