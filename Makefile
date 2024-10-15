@@ -22,7 +22,7 @@ prepare-op-chain:
 
 ## Common logic for starting/restarting OP chain on Sepolia
 _launch-op-chain:
-	@$(CURDIR)/scripts/launch-l2.sh $(CURDIR)/optimism
+	@$(CURDIR)/scripts/launch-l2.sh
 	sleep 10
 	## false represents the OP chain is deployed on the Sepolia testnet, not local L1
 	@$(CURDIR)/scripts/verify-op-devnet.sh false
