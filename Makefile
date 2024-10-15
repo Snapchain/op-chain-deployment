@@ -37,6 +37,18 @@ clean-deploy-dir:
 	@rm -rf $(CURDIR)/.deploy
 .PHONY: clean-deploy-dir
 
+## Launch the OP chain explorer
+launch-op-chain-explorer:
+
+	@$(eval include $(CURDIR)/.env)
+	@$(MAKE) -C $(CURDIR)/blockscout run-explorer
+.PHONY: launch-op-chain-explorer
+
+## Stop the OP chain explorer
+stop-op-chain-explorer:
+	@$(MAKE) -C $(CURDIR)/blockscout stop-explorer
+.PHONY: stop-op-chain-explorer
+
 ## Start the OP chain
 start-op-chain: prepare-op-chain _launch-op-chain
 .PHONY: start-op-chain
