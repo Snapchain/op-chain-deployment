@@ -55,6 +55,18 @@ deploy-multicall:
 	rm ../.env.bak
 .PHONY: deploy-multicall
 
+## Launch the OP Bridge UI
+launch-op-bridge-ui:
+	@$(CURDIR)/scripts/set-bridge-ui-env.sh
+	@$(eval include $(CURDIR)/.env)
+	@docker compose -f $(CURDIR)/bridge-ui/docker-compose.yml up -d
+.PHONY: launch-op-bridge-ui
+
+## Stop the OP Bridge UI
+stop-op-bridge-ui:
+	@docker compose -f $(CURDIR)/bridge-ui/docker-compose.yml down
+.PHONY: stop-op-bridge-ui
+
 ## Launch a local L1 chain with kurtosis and ethereum-package
 l1-launch:
 	$(eval include $(CURDIR)/.env)
