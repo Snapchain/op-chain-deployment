@@ -3,14 +3,14 @@ set -euo pipefail
 
 echo "Checking the env vars in .env file..."
 # Path to the rollup.json file
-OP_DEPLOY_DIR=$1
+OP_DEPLOY_DIR=$(pwd)/.deploy
 ROLLUP_JSON="${OP_DEPLOY_DIR}/rollup.json"
 
 # Path to the .env file
-ENV_FILE=$2
+ENV_FILE=$(pwd)/.env
 
 # Path to the OP deployments directory
-OP_DEPLOYMENTS_DIR=$3/packages/contracts-bedrock/deployments
+OP_DEPLOYMENTS_DIR=$(pwd)/optimism/packages/contracts-bedrock/deployments
 
 # List of required environment variables
 required_vars=(
@@ -18,7 +18,6 @@ required_vars=(
     "L1_BEACON_URL"
     "L2_RPC_URL"
     "L1_SYSTEM_CONFIG_CONTRACT"
-    "DISABLE_BEACON_BLOB_FETCHER"
 )
 
 # Check if each required variable is set
@@ -39,19 +38,4 @@ OUTPUT_ORACLE_ADDRESS=$(jq -r '.L2OutputOracleProxy' "$OP_DEPLOYMENTS_DIR/sepoli
 # Update .env file
 sed -i "s/^L1_SYSTEM_CONFIG_CONTRACT=.*/L1_SYSTEM_CONFIG_CONTRACT=$L1_SYSTEM_CONFIG_ADDRESS/" "$ENV_FILE"
 sed -i "s/^L1_OUTPUT_ORACLE_CONTRACT=.*/L1_OUTPUT_ORACLE_CONTRACT=$OUTPUT_ORACLE_ADDRESS/" "$ENV_FILE"
-
-# Check if DISABLE_BEACON_BLOB_FETCHER in the .env file is false
-if grep -q "^DISABLE_BEACON_BLOB_FETCHER=false" "$ENV_FILE"; then
-    # Extract L1 block number and l2_time from rollup.json
-    L1_BLOCK_NUMBER=$(jq -r '.genesis.l1.number' "$ROLLUP_JSON")
-    L2_TIME=$(jq -r '.genesis.l2_time' "$ROLLUP_JSON")
-
-    # Get the slot number of the L1 block
-    L1_SLOT_NUMBER=$(curl -s "${L1_BEACON_URL}/eth/v1/beacon/headers/${L1_BLOCK_NUMBER}" \
-    | jq -r '.data.header.message.slot')
-
-    sed -i "s/^L2_BEACON_BLOB_FETCHER_REFERENCE_SLOT=.*/L2_BEACON_BLOB_FETCHER_REFERENCE_SLOT=$L1_SLOT_NUMBER/" "$ENV_FILE"
-    sed -i "s/^L2_BEACON_BLOB_FETCHER_REFERENCE_TIMESTAMP=.*/L2_BEACON_BLOB_FETCHER_REFERENCE_TIMESTAMP=$L2_TIME/" "$ENV_FILE"
-fi
-
 echo "Updated .env file for Blockscout"

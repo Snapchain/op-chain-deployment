@@ -39,8 +39,7 @@ clean-deploy-dir:
 
 ## Launch the OP chain explorer
 launch-op-chain-explorer:
-	@$(eval include $(CURDIR)/.env)
-	@$(CURDIR)/scripts/set-blockscout-env.sh $(CURDIR)/.deploy $(CURDIR)/.env $(CURDIR)/optimism
+	@$(CURDIR)/scripts/set-blockscout-env.sh
 	@$(eval include $(CURDIR)/.env)
 	@$(MAKE) -C $(CURDIR)/blockscout run-explorer
 .PHONY: launch-op-chain-explorer
