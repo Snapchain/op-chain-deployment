@@ -35,25 +35,14 @@ verify-op-devnet:
 	@$(CURDIR)/scripts/verify-op-devnet.sh
 .PHONY: verify-op-devnet
 
-## Clean up the deployment directory
-clean-deploy-dir:
-	@rm -rf $(CURDIR)/.deploy
-.PHONY: clean-deploy-dir
-
 ## Start the OP chain
 start-op-chain: prepare-op-chain launch-op-chain
 .PHONY: start-op-chain
 
 ## Deploy the multicall contract
-deploy-multicall:
-	cd $(CURDIR)/multicall && \
-	forge build && \
-	FORGE_OUTPUT=$$(forge create --rpc-url ${L1_RPC_URL} --private-key ${L1_FUNDED_PRIVATE_KEY} Multicall3) && \
-	echo "$$FORGE_OUTPUT" && \
-	DEPLOYED_ADDRESS=$$(echo "$$FORGE_OUTPUT" | grep "Deployed to:" | awk '{print $$3}') && \
-	sed -i.bak "s/^NEXT_PUBLIC_L1_MULTICALL3_ADDRESS=.*/NEXT_PUBLIC_L1_MULTICALL3_ADDRESS=$$DEPLOYED_ADDRESS/" ../.env && \
-	rm ../.env.bak
-.PHONY: deploy-multicall
+l1-deploy-multicall:
+	@$(CURDIR)/scripts/l1-deploy-multicall.sh
+.PHONY: l1-deploy-multicall
 
 ## Launch the OP Bridge UI
 launch-op-bridge-ui:
