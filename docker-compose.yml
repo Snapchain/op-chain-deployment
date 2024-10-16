@@ -102,6 +102,17 @@ services:
     networks:
       - ops-bedrock_default
 
+  op-bridge-ui:
+    container_name: op-bridge-ui
+    image: snapchain/op-bridge-ui:latest
+    ports:
+      - "3002:3000"
+    env_file:
+      - .bridge.env
+    restart: unless-stopped
+    networks:
+      - ops-bedrock_default
+
 volumes:
   l2_data:
   safedb_data:

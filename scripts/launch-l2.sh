@@ -21,7 +21,7 @@ wait_up() {
 
 # set the needed environment variable
 echo "Setting the needed environment variable..."
-DEPLOYMENT_OUTFILE=$1/packages/contracts-bedrock/deployments/sepolia-devnet-${L2_CHAIN_ID}.json
+DEPLOYMENT_OUTFILE=$1/packages/contracts-bedrock/deployments/op-devnet-${L2_CHAIN_ID}.json
 if [ "$DEVNET_L2OO" = true ]; then
   export L2OO_ADDRESS=$(jq -r .L2OutputOracleProxy < ${DEPLOYMENT_OUTFILE})
 else

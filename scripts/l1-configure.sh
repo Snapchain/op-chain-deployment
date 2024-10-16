@@ -16,5 +16,5 @@ echo "{\"address\": \"$address\", \"key\": \"$key\"}" > configs/l1-prefund-walle
 cp configs/network_params.yaml.example configs/network_params.yaml
 
 # Replace the placeholder address with the new address
-# TODO: this is not supported on MacOS. figure out a way to support both Linux and MacOS
-sed -i "s/0xADDRESS/$address/g" configs/network_params.yaml
+# This works on both Linux and MacOS
+sed -i.bak "s/0xADDRESS/$address/g" configs/network_params.yaml && rm configs/network_params.yaml.bak

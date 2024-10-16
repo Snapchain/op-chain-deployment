@@ -21,15 +21,18 @@ prepare-op-chain:
 .PHONY: prepare-op-chain
 
 ## Common logic for starting/restarting OP chain on Sepolia
-_launch-op-chain:
+OP_BEDROCK_DIR := $(CURDIR)/optimism/packages/contracts-bedrock
+launch-op-chain:
 	@$(CURDIR)/scripts/launch-l2.sh $(CURDIR)/optimism
 	sleep 10
+	mv $(OP_BEDROCK_DIR)/deployments/op-devnet-${L2_CHAIN_ID}.json $(CURDIR)/.deploy/op-devnet-deployments-${L2_CHAIN_ID}.json
+	mv $(OP_BEDROCK_DIR)/deploy-config/op-devnet-${L2_CHAIN_ID}.json $(CURDIR)/.deploy/op-devnet-deploy-config-${L2_CHAIN_ID}.json
 	## false represents the OP chain is deployed on the Sepolia testnet, not local L1
-	@$(CURDIR)/scripts/verify-op-devnet.sh false
-.PHONY: _launch-op-chain
+	@$(CURDIR)/scripts/verify-op-devnet.sh
+.PHONY: launch-op-chain
 
 verify-op-devnet:
-	@$(CURDIR)/scripts/verify-op-devnet.sh false
+	@$(CURDIR)/scripts/verify-op-devnet.sh
 .PHONY: verify-op-devnet
 
 ## Clean up the deployment directory
@@ -38,8 +41,30 @@ clean-deploy-dir:
 .PHONY: clean-deploy-dir
 
 ## Start the OP chain
-start-op-chain: prepare-op-chain _launch-op-chain
+start-op-chain: prepare-op-chain launch-op-chain
 .PHONY: start-op-chain
+
+## Deploy the multicall contract
+deploy-multicall:
+	cd $(CURDIR)/multicall && \
+	forge build && \
+	FORGE_OUTPUT=$$(forge create --rpc-url ${L1_RPC_URL} --private-key ${L1_FUNDED_PRIVATE_KEY} Multicall3) && \
+	echo "$$FORGE_OUTPUT" && \
+	DEPLOYED_ADDRESS=$$(echo "$$FORGE_OUTPUT" | grep "Deployed to:" | awk '{print $$3}') && \
+	sed -i.bak "s/^NEXT_PUBLIC_L1_MULTICALL3_ADDRESS=.*/NEXT_PUBLIC_L1_MULTICALL3_ADDRESS=$$DEPLOYED_ADDRESS/" ../.env && \
+	rm ../.env.bak
+.PHONY: deploy-multicall
+
+## Launch the OP Bridge UI
+launch-op-bridge-ui:
+	@$(CURDIR)/scripts/set-bridge-ui-env.sh
+	@docker compose up -d op-bridge-ui
+.PHONY: launch-op-bridge-ui
+
+## Stop the OP Bridge UI
+stop-op-bridge-ui:
+	@docker compose down op-bridge-ui
+.PHONY: stop-op-bridge-ui
 
 ## Launch a local L1 chain with kurtosis and ethereum-package
 l1-launch:

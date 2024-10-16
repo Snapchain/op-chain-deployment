@@ -1,3 +1,6 @@
 [submodule "optimism"]
 	path = optimism
 	url = git@github.com:babylonlabs-io/optimism.git
+[submodule "multicall"]
+	path = multicall
+	url = https://github.com/mds1/multicall.git
