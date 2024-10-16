@@ -1,13 +1,15 @@
 #!/bin/bash
 set -euo pipefail
 
-# TODO: better to use Foundry instead of curl/jq
+# Load environment variables from the top-level .env file
+set -a
+source $(pwd)/.env
+set +a
 
 # check if L2 op-geth is running
 echo "Checking if L2 op-geth is running..."
-L2_CHAIN_ID_RESULT=$(curl -s -X POST -H 'Content-Type: application/json' \
-    -d '{"jsonrpc": "2.0", "method": "eth_chainId", "params": [], "id": 1}' \
-    http://localhost:9545 | jq -r '.result' | xargs printf '%d\n')
+L2_CHAIN_ID_RESULT=$(cast chain-id --rpc-url http://localhost:9545)
+
 if [ "$L2_CHAIN_ID_RESULT" = "$L2_CHAIN_ID" ]; then
     echo "L2 op-geth is running and the chain id is $L2_CHAIN_ID"
 else
