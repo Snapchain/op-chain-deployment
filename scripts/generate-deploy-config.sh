@@ -24,7 +24,7 @@ fi
 
 # Create the config file with the additional fields, e.g. useFaultProofs
 GETTING_STARTED_OUTFILE=${OP_CONTRACTS_DIR}/deploy-config/getting-started.json
-DEPLOY_CONFIG_PATH=${OP_CONTRACTS_DIR}/deploy-config/sepolia-devnet-${L2_CHAIN_ID}.json
+DEPLOY_CONFIG_PATH=${OP_CONTRACTS_DIR}/deploy-config/op-devnet-${L2_CHAIN_ID}.json
 jq ".useFaultProofs = ${USE_FAULT_PROOFS}" ${GETTING_STARTED_OUTFILE} > ${DEPLOY_CONFIG_PATH}
 rm ${GETTING_STARTED_OUTFILE}
 echo "Deployment configuration generated at ${DEPLOY_CONFIG_PATH}"
