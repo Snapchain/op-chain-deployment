@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+
+
 # Generate wallet
 wallet=$(cast wallet new)
 
