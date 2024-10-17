@@ -1,6 +1,11 @@
 #!/bin/bash
 set -euo pipefail
 
+# Load environment variables from the top-level .env file
+set -a
+source $(pwd)/.env
+set +a
+
 # Run the Optimism Monorepo's config.sh script
 # which will generate the getting-started.json configuration file
 echo "Generating deployment configuration for OP L2..."
