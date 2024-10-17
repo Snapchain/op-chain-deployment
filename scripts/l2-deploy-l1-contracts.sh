@@ -1,6 +1,23 @@
 #!/bin/bash
 set -euo pipefail
 
+# Load environment variables from the top-level .env file
+set -a
+source $(pwd)/.env
+set +a
+
+# Check L1_CHAIN_ID. For local development, we don't want to use 900 or 1337 b/c there are special
+# logic here: https://github.com/ethereum-optimism/optimism/blob/f58f1f56dc7e7cc3cad82973a9ed0c1b22c5356f/packages/contracts-bedrock/scripts/deploy/Deploy.s.sol#L978
+# Since we don't run `make pre-devnet`, it won't generate `op-program/bin/prestate-proof.json`. So the code will throw
+# here if 900 or 1337 is the L1 chain ID: https://github.com/ethereum-optimism/optimism/blob/f58f1f56dc7e7cc3cad82973a9ed0c1b22c5356f/packages/contracts-bedrock/scripts/deploy/Deploy.s.sol#L996C74-L996C108
+# The reason we don't want to run `make pre-devnet` is because it takes a very long time to compile.
+# The command runs `make op-program` and `make cannon` which takes long to compile. Since we don't
+# enable fault proofs, we don't need op-program either. So adding this check as a tmp workaround.
+if [[ "$L1_CHAIN_ID" == "900" || "$L1_CHAIN_ID" == "1337" ]]; then
+    echo "Error: L1_CHAIN_ID cannot be 900 or 1337"
+    exit 1
+fi
+
 # Go to the OP contracts directory
 OP_CONTRACTS_DIR=$1/packages/contracts-bedrock
 echo "OP_CONTRACTS_DIR: $OP_CONTRACTS_DIR"
