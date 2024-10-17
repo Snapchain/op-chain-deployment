@@ -1,11 +1,3 @@
-include .env
-# Define GOPATH
-# TODO: is this needed?
-export GOPATH := $(HOME)/go
-export PATH := $(HOME)/.just:$(HOME)/.foundry/bin:/usr/local/go/bin:$(GOPATH)/bin:$(PATH)
-# makes all variables in the Makefile available to child processes
-export
-
 ## Launch the OP chain
 l2-launch: l2-gen-addresses l2-prepare l2-start l2-verify
 	@$(MAKE) l2-bridge-deploy-l1-multicall
@@ -85,7 +77,6 @@ l1-configure:
 
 ## Launch a local L1 chain with kurtosis and ethereum-package
 l1-launch:
-	$(eval include $(CURDIR)/.env)
 	@kurtosis run --enclave $(KURTOSIS_LOCAL_L1_ENCLAVE_NAME) github.com/ethpandaops/ethereum-package --args-file $(KURTOSIS_LOCAL_L1_ARGS_FILE)
 	sleep 45
 	@$(MAKE) l1-verify
