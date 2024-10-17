@@ -6,11 +6,11 @@ export PATH := $(HOME)/.just:$(HOME)/.foundry/bin:/usr/local/go/bin:$(GOPATH)/bi
 # makes all variables in the Makefile available to child processes
 export
 
-## Start the OP chain
+## Launch the OP chain
 l2-launch: l2-gen-addresses l2-prepare l2-start l2-verify
 .PHONY: l2-launch
 
-## Stop the OP chain
+## Stop the OP chain (removes the .deploy directory and the op-chain-deployment volume)
 l2-stop:
 	@$(CURDIR)/scripts/l2-stop.sh
 .PHONY: l2-stop
@@ -23,14 +23,14 @@ l2-gen-addresses:
 ## Prepare for running the OP chain
 l2-prepare:
 	@$(eval export IMPL_SALT := $(shell openssl rand -hex 32))
-	@$(CURDIR)/scripts/generate-deploy-config.sh $(CURDIR)/optimism
-	@$(CURDIR)/scripts/deploy-l1-contracts.sh $(CURDIR)/optimism
-	@$(CURDIR)/scripts/generate-l2-config.sh $(CURDIR)/optimism $(CURDIR)/.deploy
+	@$(CURDIR)/scripts/l2-generate-deploy-config.sh $(CURDIR)/optimism
+	@$(CURDIR)/scripts/l2-deploy-l1-contracts.sh $(CURDIR)/optimism
+	@$(CURDIR)/scripts/l2-generate-l2-config.sh $(CURDIR)/optimism $(CURDIR)/.deploy
 .PHONY: l2-prepare
 
-## Launch the OP chain core components (op-node, op-geth, proposer, batcher)
+## Start the OP chain core components (op-node, op-geth, proposer, batcher)
 l2-start:
-	@$(CURDIR)/scripts/launch-l2.sh $(CURDIR)/optimism
+	@$(CURDIR)/scripts/l2-start.sh $(CURDIR)/optimism
 .PHONY: l2-start
 
 ## Verify the OP chain is running
@@ -45,7 +45,7 @@ l2-bridge-deploy-l1-multicall:
 
 ## Launch the OP Bridge UI
 l2-bridge-start:
-	@$(CURDIR)/scripts/set-bridge-ui-env.sh
+	@$(CURDIR)/scripts/l2-bridge-set-env.sh
 	@docker compose up -d op-bridge-ui
 .PHONY: l2-bridge-start
 
