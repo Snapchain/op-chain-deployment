@@ -5,7 +5,7 @@ set -euo pipefail
 docker compose -f "$(pwd)/docker-compose.yml" down
 
 # Remove the .deploy directory
-rm -rf "$(pwd)/optimism/.deploy"
+rm -rf "$(pwd)/.deploy"
 
 # Remove the op-chain-deployment volume
 docker volume ls --filter name=op-chain-deployment --format='{{.Name}}' | xargs -r docker volume rm
