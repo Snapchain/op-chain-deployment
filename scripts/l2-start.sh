@@ -1,6 +1,11 @@
 #!/bin/bash
 set -euo pipefail
 
+# Load environment variables from the top-level .env file
+set -a
+source $(pwd)/.env
+set +a
+
 wait_up() {
     local port=$1
     local retries=10
@@ -21,7 +26,7 @@ wait_up() {
 
 # set the needed environment variable
 echo "Setting the needed environment variable..."
-DEPLOYMENT_OUTFILE=$1/packages/contracts-bedrock/deployments/sepolia-devnet-${L2_CHAIN_ID}.json
+DEPLOYMENT_OUTFILE=$1/packages/contracts-bedrock/deployments/op-devnet-${L2_CHAIN_ID}.json
 if [ "$DEVNET_L2OO" = true ]; then
   export L2OO_ADDRESS=$(jq -r .L2OutputOracleProxy < ${DEPLOYMENT_OUTFILE})
 else
@@ -66,3 +71,8 @@ wait_up 7545
 wait_up 7546
 wait_up 7547
 echo
+
+sleep 10
+OP_BEDROCK_DIR=$(pwd)/optimism/packages/contracts-bedrock
+mv ${OP_BEDROCK_DIR}/deployments/op-devnet-${L2_CHAIN_ID}.json $(pwd)/.deploy/op-devnet-deployments-${L2_CHAIN_ID}.json
+mv ${OP_BEDROCK_DIR}/deploy-config/op-devnet-${L2_CHAIN_ID}.json $(pwd)/.deploy/op-devnet-deploy-config-${L2_CHAIN_ID}.json

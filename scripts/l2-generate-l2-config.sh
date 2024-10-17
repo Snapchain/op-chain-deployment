@@ -12,8 +12,8 @@ JWT_SECRET_PATH=${OP_DEPLOY_DIR}/test-jwt-secret.txt
 
 # Go to the OP contracts directory
 OP_CONTRACTS_DIR=$1/packages/contracts-bedrock
-DEPLOY_CONFIG_PATH=${OP_CONTRACTS_DIR}/deploy-config/sepolia-devnet-${L2_CHAIN_ID}.json
-DEPLOYMENT_OUTFILE=${OP_CONTRACTS_DIR}/deployments/sepolia-devnet-${L2_CHAIN_ID}.json
+DEPLOY_CONFIG_PATH=${OP_CONTRACTS_DIR}/deploy-config/op-devnet-${L2_CHAIN_ID}.json
+DEPLOYMENT_OUTFILE=${OP_CONTRACTS_DIR}/deployments/op-devnet-${L2_CHAIN_ID}.json
 echo "OP_CONTRACTS_DIR: $OP_CONTRACTS_DIR"
 cd $OP_CONTRACTS_DIR
 
