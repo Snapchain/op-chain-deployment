@@ -6,9 +6,17 @@ export PATH := $(HOME)/.just:$(HOME)/.foundry/bin:/usr/local/go/bin:$(GOPATH)/bi
 # makes all variables in the Makefile available to child processes
 export
 
+
 ## Start the OP chain
-start-op-chain: l2-prepare l2-launch
+l2-launch: l2-gen-addresses l2-prepare l2-start l2-verify
 .PHONY: start-op-chain
+
+## Stop the OP chain
+l2-stop:
+	@$(DOCKER) compose -f $(CURDIR)/optimism/docker-compose.yml down
+	@rm -rf $(CURDIR)/optimism/.deploy
+	@$(DOCKER) volume ls --filter name=optimism --format='{{.Name}}' | xargs -r docker volume rm
+.PHONY: stop-op-chain-sepolia
 
 ## Generate addresses for the L2 and update the .env file
 l2-gen-addresses:
@@ -24,9 +32,9 @@ l2-prepare:
 .PHONY: l2-prepare
 
 ## Launch the OP chain core components (op-node, op-geth, proposer, batcher)
-l2-launch:
+l2-start:
 	@$(CURDIR)/scripts/launch-l2.sh $(CURDIR)/optimism
-.PHONY: l2-launch
+.PHONY: l2-start
 
 ## Verify the OP chain is running
 l2-verify:

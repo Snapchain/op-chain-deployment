@@ -76,5 +76,3 @@ sleep 10
 OP_BEDROCK_DIR=$(pwd)/optimism/packages/contracts-bedrock
 mv ${OP_BEDROCK_DIR}/deployments/op-devnet-${L2_CHAIN_ID}.json $(pwd)/.deploy/op-devnet-deployments-${L2_CHAIN_ID}.json
 mv ${OP_BEDROCK_DIR}/deploy-config/op-devnet-${L2_CHAIN_ID}.json $(pwd)/.deploy/op-devnet-deploy-config-${L2_CHAIN_ID}.json
-
-$(pwd)/scripts/verify-op-devnet.sh
