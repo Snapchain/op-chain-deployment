@@ -25,6 +25,8 @@ l1-configure:
 .PHONY: l1-configure
 
 ## Launch a local L1 chain with kurtosis and ethereum-package
+## Note: we need to wait long enough for the L1 chain to run and produce at least one block,
+## after some testing, 45s is a safe number.
 l1-launch:
 	@kurtosis run --enclave $(KURTOSIS_LOCAL_L1_ENCLAVE_NAME) github.com/ethpandaops/ethereum-package --args-file $(KURTOSIS_LOCAL_L1_ARGS_FILE)
 	sleep 45
