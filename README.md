@@ -5,6 +5,7 @@
 ```
 cp .env.example .env
 cp .env.explorer.example .env.explorer
+cp .env.bridge.example .env.bridge
 ```
 
 ### Fetch and update the submodules
@@ -15,7 +16,7 @@ git submodule update --init --recursive
 
 ### Update the environment variables
 
-Update environment variables in the `.env` and `.env.explorer` files.
+Update environment variables in the `.env` files.
 
 ## Local L1 chain
 
