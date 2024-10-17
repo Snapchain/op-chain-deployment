@@ -1,7 +1,7 @@
-.env
-.env.explorer
-.env.bridge
-configs/network_params.yaml
+**/.env
+**/.env.explorer
+**/.env.bridge
+**/network_params.yaml
 .deploy
 *wallet.json
 .DS_Store
