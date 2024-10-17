@@ -1,0 +1,133 @@
+services:
+  backend:
+    container_name: backend
+    image: blockscout/blockscout-optimism:${DOCKER_TAG_BACKEND:-latest}
+    command: sh -c "bin/blockscout eval \"Elixir.Explorer.ReleaseTasks.create_and_migrate()\" && bin/blockscout start"
+    pull_policy: always
+    restart: always
+    stop_grace_period: 5m
+    env_file:
+      - ./envs/common-blockscout.env
+    ports:
+      - 4001:4000
+
+  backend-db:
+    container_name: backend-db
+    image: postgres:15
+    ports:
+      - 5437:5432
+    environment:
+      - POSTGRES_USER=${EXPLORER_DB_USER}
+      - POSTGRES_PASSWORD=${EXPLORER_DB_PASSWORD}
+      - POSTGRES_DB=${EXPLORER_DB_NAME}
+    volumes:
+      - backend_db_data:/var/lib/postgresql/data
+    command: ["postgres", "-N", "500"]
+
+  frontend:
+    container_name: frontend
+    image: ghcr.io/blockscout/frontend:${DOCKER_TAG_FRONTEND:-latest}
+    pull_policy: always
+    restart: always
+    platform: linux/amd64
+    env_file:
+      - ./envs/common-frontend.env
+    ports:
+      - 3001:3000
+
+  stats-db:
+    depends_on:
+      - backend
+    container_name: stats-db
+    image: postgres:15
+    restart: always
+    command: postgres -c 'max_connections=200'
+    environment:
+      - POSTGRES_USER=${STATS_DB_USER}
+      - POSTGRES_PASSWORD=${STATS_DB_PASSWORD}
+      - POSTGRES_DB=${STATS_DB_NAME}
+    ports:
+      - 7434:5432
+    volumes:
+      - stats_db_data:/var/lib/postgresql/data
+
+  stats:
+    depends_on:
+      - stats-db
+    container_name: stats
+    image: ghcr.io/blockscout/stats:${DOCKER_TAG_STATS:-latest}
+    pull_policy: always
+    platform: linux/amd64
+    restart: always
+    env_file:
+      - ./envs/common-stats.env
+    ports:
+      - 8154:8050
+
+  proxy:
+    depends_on:
+      - backend
+      - frontend
+      - stats
+    container_name: proxy
+    image: nginx:1.25.3
+    volumes:
+      - "./proxy/default.conf.template:/etc/nginx/templates/default.conf.template"
+    environment:
+      PROXIED_FRONT_URL: http://${COMMON_HOST}
+      BACK_PROXY_PASS: http://backend:4000
+      FRONT_PROXY_PASS: http://frontend:3000
+      STATS_PROXY_PASS: http://stats:8050/
+    ports:
+      - 80:80
+      - 8084:8080
+
+  smart-contract-verifier:
+    image: ghcr.io/blockscout/smart-contract-verifier:${DOCKER_TAG_SMART_CONTRACT_VERIFIER:-latest}
+    pull_policy: always
+    platform: linux/amd64
+    restart: always
+    container_name: "smart-contract-verifier"
+    env_file:
+      - ./envs/common-smart-contract-verifier.env
+    ports:
+      - 8150:8050
+
+  visualizer:
+    image: ghcr.io/blockscout/visualizer:${DOCKER_TAG_VISUALIZER:-latest}
+    pull_policy: always
+    platform: linux/amd64
+    restart: always
+    container_name: "visualizer"
+    env_file:
+      - ./envs/common-visualizer.env
+    ports:
+      - 8152:8050
+
+  sig-provider:
+    image: ghcr.io/blockscout/sig-provider:${DOCKER_TAG_SIG_PROVIDER:-latest}
+    pull_policy: always
+    platform: linux/amd64
+    restart: always
+    container_name: "sig-provider"
+    ports:
+      - 8151:8050
+
+  visualizer-proxy:
+    container_name: "visualizer-proxy"
+    image: nginx:1.25.3
+    volumes:
+      - "./proxy/visualizer.conf.template:/etc/nginx/templates/default.conf.template"
+    environment:
+      NGINX_CONFIG_VERSION: 1
+      PROXIED_FRONT_URL: http://${COMMON_HOST}
+      FRONT_PROXY_PASS: http://visualizer:8050/
+    ports:
+      - 8083:8081
+
+volumes:
+  backend_db_data:
+  stats_db_data:
+
+networks:
+  devnet-explorer_default:

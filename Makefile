@@ -1,8 +1,4 @@
 include .env
-# Define GOPATH
-# TODO: is this needed?
-export GOPATH := $(HOME)/go
-export PATH := $(HOME)/.just:$(HOME)/.foundry/bin:/usr/local/go/bin:$(GOPATH)/bin:$(PATH)
 # makes all variables in the Makefile available to child processes
 export
 
@@ -10,11 +6,13 @@ export
 l2-launch: l2-gen-addresses l2-prepare l2-start l2-verify
 	@$(MAKE) l2-bridge-deploy-l1-multicall
 	@$(MAKE) l2-bridge-start
+	@$(MAKE) l2-explorer-start
 .PHONY: l2-launch
 
 ## Stop the OP chain (removes the .deploy directory and the op-chain-deployment volume)
 l2-stop:
 	@$(CURDIR)/scripts/l2-stop.sh
+	@$(MAKE) l2-explorer-stop
 .PHONY: l2-stop
 
 ## Generate addresses for the L2 and update the .env file
@@ -56,6 +54,20 @@ l2-bridge-stop:
 	@docker compose down op-bridge-ui
 .PHONY: l2-bridge-stop
 
+## Launch the OP chain explorer
+l2-explorer-start:
+	@$(CURDIR)/scripts/l2-blockscout-set-env.sh
+	$(eval include $(CURDIR)/.env.explorer)
+	@$(MAKE) -C $(CURDIR)/blockscout run-explorer
+.PHONY: l2-explorer-start
+
+## Stop the OP chain explorer
+l2-explorer-stop:
+	$(eval include $(CURDIR)/.env.explorer)
+	@$(MAKE) -C $(CURDIR)/blockscout stop-explorer
+	@$(MAKE) -C $(CURDIR)/blockscout remove-volumes
+.PHONY: l2-explorer-stop
+
 ####### Local L1 #######
 
 ## Kurtosis local L1
@@ -69,7 +81,6 @@ l1-configure:
 
 ## Launch a local L1 chain with kurtosis and ethereum-package
 l1-launch:
-	$(eval include $(CURDIR)/.env)
 	@kurtosis run --enclave $(KURTOSIS_LOCAL_L1_ENCLAVE_NAME) github.com/ethpandaops/ethereum-package --args-file $(KURTOSIS_LOCAL_L1_ARGS_FILE)
 	sleep 45
 	@$(MAKE) l1-verify

@@ -1,4 +1,6 @@
-*.env
+.env
+.env.explorer
+.env.bridge
 configs/network_params.yaml
 .deploy
 *wallet.json
