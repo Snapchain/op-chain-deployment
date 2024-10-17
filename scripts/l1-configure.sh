@@ -10,7 +10,7 @@ address=$(echo "$wallet" | awk '/Address/ { print $2 }')
 key=$(echo "$wallet" | awk '/Private key/ { print $3 }')
 
 # Save the wallet address and private key to a json file
-echo "{\"address\": \"$address\", \"key\": \"$key\"}" > configs/l1-prefund-wallet.json
+echo "{\"address\": \"$address\", \"key\": \"$key\"}" > configs/l1/l1-prefund-wallet.json
 
 # Create the network_params.yaml file if it doesn't exist
 cp configs/l1/network_params.yaml.example configs/l1/network_params.yaml

@@ -4,6 +4,7 @@
 
 ```
 cp .env.example .env
+cp .env.explorer.example .env.explorer
 ```
 
 ### Fetch and update the submodules
@@ -12,15 +13,9 @@ cp .env.example .env
 git submodule update --init --recursive
 ```
 
-### Generate addresses
-
-```
-make generate-addresses
-```
-
 ### Update the environment variables
 
-Copy the the addresses generated in the [Generate addresses](#generate-addresses) section and update the `.env` file with them.
+Update environment variables in the `.env` and `.env.explorer` files.
 
 ## Local L1 chain
 
@@ -30,7 +25,7 @@ Copy the the addresses generated in the [Generate addresses](#generate-addresses
 make l1-configure
 ```
 
-**Note:** It will generate a new wallet `configs/l1-prefund-wallet.json` and update the `configs/l1/network_params.yaml` file with the address to use for the prefunded account. You can update the `configs/l1/network_params.yaml` file manually to use an existing wallet.
+**Note:** It will generate a new wallet `configs/l1/l1-prefund-wallet.json` and update the `configs/l1/network_params.yaml` file with the address to use for the prefunded account. You can update the `configs/l1/network_params.yaml` file manually to use an existing wallet.
 
 ### Launch with kurtosis and ethereum-package
 
