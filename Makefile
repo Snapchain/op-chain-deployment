@@ -6,6 +6,7 @@
 # TODO: it may be safer to $(eval include $(CURDIR)/.env) in each of the scripts that need it
 include .env
 include .env.explorer
+include .env.bridge
 # make all variables in the Makefile available to child processes
 export
 
