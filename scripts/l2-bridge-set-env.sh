@@ -22,7 +22,7 @@ L1_STANDARD_BRIDGE_PROXY=$(jq -r '.L1StandardBridgeProxy' "$OP_DEPLOYMENTS_JSON_
 L1_OPTIMISM_PORTAL_PROXY=$(jq -r '.OptimismPortalProxy' "$OP_DEPLOYMENTS_JSON_PATH")
 L2_OUTPUT_ORACLE_PROXY=$(jq -r '.L2OutputOracleProxy' "$OP_DEPLOYMENTS_JSON_PATH")
 
-# TODO: 9545 is now hardcoded in the docker-compose.yml file and a few other places.
+# TODO: 9545 is now hardcoded in the docker-compose-l2.yml file and a few other places.
 #       we should make this more dynamic by defining a variable in the .env file
 L2_RPC_URL="http://localhost:9545"
 

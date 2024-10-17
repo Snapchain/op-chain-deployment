@@ -53,7 +53,7 @@ echo
 
 # Launch the OP L2
 echo "Launching the OP L2..."
-docker compose -f docker-compose.yml up -d l2
+docker compose -f docker/docker-compose-l2.yml up -d l2
 
 # Wait for the OP L2 to be available
 echo "Waiting for OP L2 to be available..."
@@ -63,7 +63,7 @@ echo
 
 # Launch the OP Node, Proposer and Batcher
 echo "Launching the OP Node, Proposer and Batcher..."
-docker compose -f docker-compose.yml up -d op-node op-proposer op-batcher
+docker compose -f docker/docker-compose-l2.yml up -d op-node op-proposer op-batcher
 
 # Wait for the OP Node to be available
 echo "Waiting for OP Node, Proposer and Batcher to be available..."

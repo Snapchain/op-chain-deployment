@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # Stop the OP chain containers
-docker compose -f "$(pwd)/docker-compose.yml" down
+docker compose -f "$(pwd)/docker/docker-compose-l2.yml" down
 
 # Remove the .deploy directory
 rm -rf "$(pwd)/.deploy"

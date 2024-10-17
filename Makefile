@@ -115,11 +115,23 @@ l2-bridge-stop:
 ## Launch the OP chain explorer
 l2-explorer-start:
 	@$(CURDIR)/scripts/l2-blockscout-set-env.sh
-	@$(MAKE) -C $(CURDIR)/blockscout run-explorer
+	docker compose -f docker/docker-compose-l2-explorer.yml up -d backend-db stats-db
+	sleep 5
+	docker compose -f docker/docker-compose-l2-explorer.yml up -d backend frontend stats smart-contract-verifier visualizer sig-provider visualizer-proxy proxy
 .PHONY: l2-explorer-start
 
-## Stop the OP chain explorer
-l2-explorer-stop:
-	@$(MAKE) -C $(CURDIR)/blockscout stop-explorer
-	@$(MAKE) -C $(CURDIR)/blockscout remove-volumes
+## Stop the OP chain explorer and remove the volumes
+l2-explorer-stop: ## Stops all explorer services
+	docker compose -f docker/docker-compose-l2-explorer.yml stop proxy visualizer-proxy sig-provider visualizer smart-contract-verifier stats frontend backend stats-db backend-db
+	docker compose -f docker/docker-compose-l2-explorer.yml rm -f proxy visualizer-proxy sig-provider visualizer smart-contract-verifier stats frontend backend stats-db backend-db
 .PHONY: l2-explorer-stop
+
+## Show running services for the OP chain explorer
+l2-explorer-ps:
+	docker compose -f docker/docker-compose-l2-explorer.yml ps
+.PHONY: l2-explorer-ps
+
+## Show logs for the OP chain explorer
+l2-explorer-logs:
+	docker compose -f docker/docker-compose-l2-explorer.yml logs -f
+.PHONY: l2-explorer-logs
