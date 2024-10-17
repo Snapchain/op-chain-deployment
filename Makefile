@@ -84,12 +84,12 @@ l2-bridge-deploy-l1-multicall:
 ## Launch the OP Bridge UI
 l2-bridge-start:
 	@$(CURDIR)/scripts/l2-bridge/l2-bridge-set-env.sh
-	@docker compose up -d op-bridge-ui
+	@docker compose -f docker/docker-compose-l2.yml up -d op-bridge-ui
 .PHONY: l2-bridge-start
 
 ## Stop the OP Bridge UI
 l2-bridge-stop:
-	@docker compose down op-bridge-ui
+	@docker compose -f docker/docker-compose-l2.yml down op-bridge-ui
 .PHONY: l2-bridge-stop
 
 
