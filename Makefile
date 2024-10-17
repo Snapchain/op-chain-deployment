@@ -10,11 +10,13 @@ export
 l2-launch: l2-gen-addresses l2-prepare l2-start l2-verify
 	@$(MAKE) l2-bridge-deploy-l1-multicall
 	@$(MAKE) l2-bridge-start
+	@$(MAKE) l2-explorer-start
 .PHONY: l2-launch
 
 ## Stop the OP chain (removes the .deploy directory and the op-chain-deployment volume)
 l2-stop:
 	@$(CURDIR)/scripts/l2-stop.sh
+	@$(MAKE) l2-explorer-stop
 .PHONY: l2-stop
 
 ## Generate addresses for the L2 and update the .env file
