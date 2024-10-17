@@ -6,54 +6,66 @@ export PATH := $(HOME)/.just:$(HOME)/.foundry/bin:/usr/local/go/bin:$(GOPATH)/bi
 # makes all variables in the Makefile available to child processes
 export
 
-# Kurtosis local L1
+## Launch the OP chain
+l2-launch: l2-gen-addresses l2-prepare l2-start l2-verify
+	@$(MAKE) l2-bridge-deploy-l1-multicall
+	@$(MAKE) l2-bridge-start
+.PHONY: l2-launch
+
+## Stop the OP chain (removes the .deploy directory and the op-chain-deployment volume)
+l2-stop:
+	@$(CURDIR)/scripts/l2-stop.sh
+.PHONY: l2-stop
+
+## Generate addresses for the L2 and update the .env file
+l2-gen-addresses:
+	@$(CURDIR)/scripts/l2-gen-addresses.sh
+.PHONY: l2-gen-addresses
+
+## Prepare for running the OP chain
+l2-prepare:
+	@$(eval export IMPL_SALT := $(shell openssl rand -hex 32))
+	@$(CURDIR)/scripts/l2-generate-deploy-config.sh $(CURDIR)/optimism
+	@$(CURDIR)/scripts/l2-deploy-l1-contracts.sh $(CURDIR)/optimism
+	@$(CURDIR)/scripts/l2-generate-l2-config.sh $(CURDIR)/optimism $(CURDIR)/.deploy
+.PHONY: l2-prepare
+
+## Start the OP chain core components (op-node, op-geth, proposer, batcher)
+l2-start:
+	@$(CURDIR)/scripts/l2-start.sh $(CURDIR)/optimism
+.PHONY: l2-start
+
+## Verify the OP chain is running
+l2-verify:
+	@$(CURDIR)/scripts/l2-verify.sh
+.PHONY: l2-verify
+
+## Deploy the multicall contract
+l2-bridge-deploy-l1-multicall:
+	@$(CURDIR)/scripts/l2-bridge-deploy-l1-multicall.sh
+.PHONY: l2-bridge-deploy-l1-multicall
+
+## Launch the OP Bridge UI
+l2-bridge-start:
+	@$(CURDIR)/scripts/l2-bridge-set-env.sh
+	@docker compose up -d op-bridge-ui
+.PHONY: l2-bridge-start
+
+## Stop the OP Bridge UI
+l2-bridge-stop:
+	@docker compose down op-bridge-ui
+.PHONY: l2-bridge-stop
+
+####### Local L1 #######
+
+## Kurtosis local L1
 KURTOSIS_LOCAL_L1_ENCLAVE_NAME=kurtosis-local-l1
 KURTOSIS_LOCAL_L1_ARGS_FILE=configs/network_params.yaml
 
-## Prepare for running the OP chain on the Sepolia testnet
-prepare-op-chain:
-	@$(MAKE) -C $(CURDIR)/optimism submodules
-	@$(eval export IMPL_SALT := $(shell openssl rand -hex 32))
-	$(eval include $(CURDIR)/.env)
-	@$(CURDIR)/scripts/generate-deploy-config.sh $(CURDIR)/optimism
-	@$(CURDIR)/scripts/deploy-l1-contracts.sh $(CURDIR)/optimism
-	@$(CURDIR)/scripts/generate-l2-config.sh $(CURDIR)/optimism $(CURDIR)/.deploy
-.PHONY: prepare-op-chain
-
-## Common logic for starting/restarting OP chain on Sepolia
-OP_BEDROCK_DIR := $(CURDIR)/optimism/packages/contracts-bedrock
-launch-op-chain:
-	@$(CURDIR)/scripts/launch-l2.sh $(CURDIR)/optimism
-	sleep 10
-	mv $(OP_BEDROCK_DIR)/deployments/op-devnet-${L2_CHAIN_ID}.json $(CURDIR)/.deploy/op-devnet-deployments-${L2_CHAIN_ID}.json
-	mv $(OP_BEDROCK_DIR)/deploy-config/op-devnet-${L2_CHAIN_ID}.json $(CURDIR)/.deploy/op-devnet-deploy-config-${L2_CHAIN_ID}.json
-	## false represents the OP chain is deployed on the Sepolia testnet, not local L1
-	@$(CURDIR)/scripts/verify-op-devnet.sh
-.PHONY: launch-op-chain
-
-verify-op-devnet:
-	@$(CURDIR)/scripts/verify-op-devnet.sh
-.PHONY: verify-op-devnet
-
-## Start the OP chain
-start-op-chain: prepare-op-chain launch-op-chain
-.PHONY: start-op-chain
-
-## Deploy the multicall contract
-l1-deploy-multicall:
-	@$(CURDIR)/scripts/l1-deploy-multicall.sh
-.PHONY: l1-deploy-multicall
-
-## Launch the OP Bridge UI
-launch-op-bridge-ui:
-	@$(CURDIR)/scripts/set-bridge-ui-env.sh
-	@docker compose up -d op-bridge-ui
-.PHONY: launch-op-bridge-ui
-
-## Stop the OP Bridge UI
-stop-op-bridge-ui:
-	@docker compose down op-bridge-ui
-.PHONY: stop-op-bridge-ui
+## Configure the local L1 chain. Generate a prefunded wallet and update the network_params.yaml file
+l1-configure:
+	@$(CURDIR)/scripts/l1-configure.sh
+.PHONY: l1-configure
 
 ## Launch a local L1 chain with kurtosis and ethereum-package
 l1-launch:
@@ -63,10 +75,7 @@ l1-launch:
 	@$(MAKE) l1-verify
 .PHONY: l1-launch
 
-l1-configure:
-	@$(CURDIR)/scripts/l1-configure.sh
-.PHONY: l1-configure
-
+## Verify the local L1 chain is running
 l1-verify:
 	@$(CURDIR)/scripts/l1-verify.sh $(KURTOSIS_LOCAL_L1_ARGS_FILE)
 .PHONY: l1-verify
@@ -76,7 +85,3 @@ l1-remove:
 	@kurtosis enclave rm -f $(KURTOSIS_LOCAL_L1_ENCLAVE_NAME)
 .PHONY: l1-remove
 
-## Generate addresses for the L2 and update the .env file
-l2-gen-addresses:
-	@$(CURDIR)/scripts/l2-gen-addresses.sh
-.PHONY: l2-gen-addresses

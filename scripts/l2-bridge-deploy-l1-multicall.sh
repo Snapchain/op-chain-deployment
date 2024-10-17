@@ -9,6 +9,11 @@ set +a
 cd "$(pwd)/multicall"
 forge build
 
+# TODO: check if the contract is already deployed. skip if it is
+# - use cast to get the chain id using L1_RPC_URL
+# - curl https://raw.githubusercontent.com/mds1/multicall/main/deployments.json
+# - check if the chain id is in the deployments.json file
+
 # Stream forge output in real-time
 forge create --rpc-url "${L1_RPC_URL}" --private-key "${L1_FUNDED_PRIVATE_KEY}" Multicall3 | tee forge_output.log
 
