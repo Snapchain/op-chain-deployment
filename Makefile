@@ -1,3 +1,7 @@
+include .env
+# makes all variables in the Makefile available to child processes
+export
+
 ## Launch the OP chain
 l2-launch: l2-gen-addresses l2-prepare l2-start l2-verify
 	@$(MAKE) l2-bridge-deploy-l1-multicall
