@@ -1,3 +1,5 @@
+####### Env #######
+
 include .env
 # Define GOPATH
 # TODO: is this needed?
@@ -5,6 +7,9 @@ export GOPATH := $(HOME)/go
 export PATH := $(HOME)/.just:$(HOME)/.foundry/bin:/usr/local/go/bin:$(GOPATH)/bin:$(PATH)
 # makes all variables in the Makefile available to child processes
 export
+
+
+####### Local L2 #######
 
 ## Launch the OP chain
 l2-launch: l2-gen-addresses l2-prepare l2-start l2-verify
@@ -72,11 +77,12 @@ l2-explorer-stop:
 	@$(MAKE) -C $(CURDIR)/blockscout remove-volumes
 .PHONY: l2-explorer-stop
 
+
 ####### Local L1 #######
 
 ## Kurtosis local L1
 KURTOSIS_LOCAL_L1_ENCLAVE_NAME=kurtosis-local-l1
-KURTOSIS_LOCAL_L1_ARGS_FILE=configs/network_params.yaml
+KURTOSIS_LOCAL_L1_ARGS_FILE=configs/l1/network_params.yaml
 
 ## Configure the local L1 chain. Generate a prefunded wallet and update the network_params.yaml file
 l1-configure:
@@ -100,4 +106,3 @@ l1-verify:
 l1-remove:
 	@kurtosis enclave rm -f $(KURTOSIS_LOCAL_L1_ENCLAVE_NAME)
 .PHONY: l1-remove
-

@@ -1,6 +1,6 @@
-.env
-.env.explorer
-configs/network_params.yaml
+**/.env
+**/.env.explorer
+**/network_params.yaml
 .deploy
 *wallet.json
 .DS_Store
