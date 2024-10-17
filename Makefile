@@ -99,11 +99,7 @@ l2-bridge-stop:
 
 ## Launch the OP chain explorer
 l2-explorer-start:
-	$(eval include $(CURDIR)/.env.explorer)
-	@$(CURDIR)/scripts/l2-explorer/l2-blockscout-set-env.sh
-	docker compose -f docker/docker-compose-l2-explorer.yml up -d backend-db stats-db
-	sleep 5
-	docker compose -f docker/docker-compose-l2-explorer.yml up -d backend frontend stats smart-contract-verifier visualizer sig-provider visualizer-proxy proxy
+	@$(CURDIR)/scripts/l2-explorer/l2-explorer-start.sh
 .PHONY: l2-explorer-start
 
 ## Stop the OP chain explorer and remove the volumes
