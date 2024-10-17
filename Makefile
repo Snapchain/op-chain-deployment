@@ -9,11 +9,6 @@ include .env.explorer
 # make all variables in the Makefile available to child processes
 export
 
-# TODO(lester): check if this is needed
-# Define GOPATH
-export GOPATH := $(HOME)/go
-export PATH := $(HOME)/.just:$(HOME)/.foundry/bin:/usr/local/go/bin:$(GOPATH)/bin:$(PATH)
-
 
 ############################
 ## L1 
