@@ -1,15 +1,54 @@
-####### Env #######
+############################
+## Env 
+############################
 
+# TODO: check if this could cause namespace collisions
+# TODO: it may be safer to $(eval include $(CURDIR)/.env) in each of the scripts that need it
 include .env
-# Define GOPATH
-# TODO: is this needed?
-export GOPATH := $(HOME)/go
-export PATH := $(HOME)/.just:$(HOME)/.foundry/bin:/usr/local/go/bin:$(GOPATH)/bin:$(PATH)
-# makes all variables in the Makefile available to child processes
+include .env.explorer
+# make all variables in the Makefile available to child processes
 export
 
+# TODO(lester): check if this is needed
+# Define GOPATH
+export GOPATH := $(HOME)/go
+export PATH := $(HOME)/.just:$(HOME)/.foundry/bin:/usr/local/go/bin:$(GOPATH)/bin:$(PATH)
 
-####### Local L2 #######
+
+############################
+## L1 
+############################
+
+## Kurtosis local L1
+KURTOSIS_LOCAL_L1_ENCLAVE_NAME=kurtosis-local-l1
+KURTOSIS_LOCAL_L1_ARGS_FILE=configs/l1/network_params.yaml
+
+## Configure the local L1 chain. Generate a prefunded wallet and update the network_params.yaml file
+l1-configure:
+	@$(CURDIR)/scripts/l1-configure.sh
+.PHONY: l1-configure
+
+## Launch a local L1 chain with kurtosis and ethereum-package
+l1-launch:
+	@kurtosis run --enclave $(KURTOSIS_LOCAL_L1_ENCLAVE_NAME) github.com/ethpandaops/ethereum-package --args-file $(KURTOSIS_LOCAL_L1_ARGS_FILE)
+	sleep 45
+	@$(MAKE) l1-verify
+.PHONY: l1-launch
+
+## Verify the local L1 chain is running
+l1-verify:
+	@$(CURDIR)/scripts/l1-verify.sh $(KURTOSIS_LOCAL_L1_ARGS_FILE)
+.PHONY: l1-verify
+
+## Remove the local L1 chain
+l1-remove:
+	@kurtosis enclave rm -f $(KURTOSIS_LOCAL_L1_ENCLAVE_NAME)
+.PHONY: l1-remove
+
+
+############################
+## L2
+############################
 
 ## Launch the OP chain
 l2-launch: l2-gen-addresses l2-prepare l2-start l2-verify
@@ -47,6 +86,11 @@ l2-verify:
 	@$(CURDIR)/scripts/l2-verify.sh
 .PHONY: l2-verify
 
+
+############################
+## L2 Bridge UI
+############################
+
 ## Deploy the multicall contract
 l2-bridge-deploy-l1-multicall:
 	@$(CURDIR)/scripts/l2-bridge-deploy-l1-multicall.sh
@@ -63,46 +107,19 @@ l2-bridge-stop:
 	@docker compose down op-bridge-ui
 .PHONY: l2-bridge-stop
 
+
+############################
+## L2 Explorer
+############################
+
 ## Launch the OP chain explorer
 l2-explorer-start:
 	@$(CURDIR)/scripts/l2-blockscout-set-env.sh
-	$(eval include $(CURDIR)/.env.explorer)
 	@$(MAKE) -C $(CURDIR)/blockscout run-explorer
 .PHONY: l2-explorer-start
 
 ## Stop the OP chain explorer
 l2-explorer-stop:
-	$(eval include $(CURDIR)/.env.explorer)
 	@$(MAKE) -C $(CURDIR)/blockscout stop-explorer
 	@$(MAKE) -C $(CURDIR)/blockscout remove-volumes
 .PHONY: l2-explorer-stop
-
-
-####### Local L1 #######
-
-## Kurtosis local L1
-KURTOSIS_LOCAL_L1_ENCLAVE_NAME=kurtosis-local-l1
-KURTOSIS_LOCAL_L1_ARGS_FILE=configs/l1/network_params.yaml
-
-## Configure the local L1 chain. Generate a prefunded wallet and update the network_params.yaml file
-l1-configure:
-	@$(CURDIR)/scripts/l1-configure.sh
-.PHONY: l1-configure
-
-## Launch a local L1 chain with kurtosis and ethereum-package
-l1-launch:
-	$(eval include $(CURDIR)/.env)
-	@kurtosis run --enclave $(KURTOSIS_LOCAL_L1_ENCLAVE_NAME) github.com/ethpandaops/ethereum-package --args-file $(KURTOSIS_LOCAL_L1_ARGS_FILE)
-	sleep 45
-	@$(MAKE) l1-verify
-.PHONY: l1-launch
-
-## Verify the local L1 chain is running
-l1-verify:
-	@$(CURDIR)/scripts/l1-verify.sh $(KURTOSIS_LOCAL_L1_ARGS_FILE)
-.PHONY: l1-verify
-
-## Remove the local L1 chain
-l1-remove:
-	@kurtosis enclave rm -f $(KURTOSIS_LOCAL_L1_ENCLAVE_NAME)
-.PHONY: l1-remove
