@@ -114,7 +114,7 @@ l2-explorer-stop: ## Stops all explorer services
 
 ## Show running services for the OP chain explorer
 l2-explorer-ps:
-	docker compose -f docker/docker-compose-l2-explorer.yml ps
+	docker compose -f docker/docker-compose-l2-explorer.yml ps --format "table {{.ID}}\t{{.Name}}\t{{.Status}}\t{{.Ports}}"
 .PHONY: l2-explorer-ps
 
 ## Show logs for the OP chain explorer
