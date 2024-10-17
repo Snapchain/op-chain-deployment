@@ -1,4 +1,5 @@
 .env
+.env.explorer
 configs/network_params.yaml
 .deploy
 *wallet.json

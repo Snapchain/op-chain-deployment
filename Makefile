@@ -56,6 +56,20 @@ l2-bridge-stop:
 	@docker compose down op-bridge-ui
 .PHONY: l2-bridge-stop
 
+## Launch the OP chain explorer
+l2-explorer-start:
+	@$(CURDIR)/scripts/l2-blockscout-set-env.sh
+	$(eval include $(CURDIR)/.env.explorer)
+	@$(MAKE) -C $(CURDIR)/blockscout run-explorer
+.PHONY: l2-explorer-start
+
+## Stop the OP chain explorer
+l2-explorer-stop:
+	$(eval include $(CURDIR)/.env.explorer)
+	@$(MAKE) -C $(CURDIR)/blockscout stop-explorer
+	@$(MAKE) -C $(CURDIR)/blockscout remove-volumes
+.PHONY: l2-explorer-stop
+
 ####### Local L1 #######
 
 ## Kurtosis local L1
