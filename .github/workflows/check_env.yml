@@ -1,0 +1,31 @@
+name: check env conflicts
+
+on:
+  push:
+    branches:
+      - '**'
+
+jobs:
+  check_env_conflicts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check for env conflicts
+        run: |
+          # Extract variable names from both files
+          vars1=$(grep -oP '(?<=^)[^#=]+(?==)' .env.example | sort)
+          vars2=$(grep -oP '(?<=^)[^#=]+(?==)' .env.explorer.example | sort)
+          
+          # Find conflicts (variables present in both files)
+          conflicts=$(comm -12 <(echo "$vars1") <(echo "$vars2"))
+          
+          # Check if there are any conflicts
+          if [ -n "$conflicts" ]; then
+            echo "Conflicts found between .env.example and .env.explorer.example:"
+            echo "$conflicts"
+            exit 1
+          else
+            echo "No conflicts found between .env.example and .env.explorer.example"
+          fi
