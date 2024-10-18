@@ -13,6 +13,13 @@ forge build
 # - use cast to get the chain id using L1_RPC_URL
 # - curl https://raw.githubusercontent.com/mds1/multicall/main/deployments.json
 # - check if the chain id is in the deployments.json file
+CHAIN_ID=$(cast chain-id --rpc-url "${L1_RPC_URL}")
+
+DEPLOYED_ADDRESS=$(curl https://raw.githubusercontent.com/mds1/multicall/main/deployments.json | grep "chainId" | awk -F '[:,]' '{print $2}' | grep -w "${CHAIN_ID}")
+if [ ! -z "${DEPLOYED_ADDRESS}" ]; then
+    echo "Contract is already deployed. Exiting."
+    exit 0
+fi
 
 # Stream forge output in real-time
 forge create --rpc-url "${L1_RPC_URL}" --private-key "${L1_FUNDED_PRIVATE_KEY}" Multicall3 | tee forge_output.log
