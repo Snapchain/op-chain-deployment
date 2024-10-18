@@ -1,6 +1,11 @@
 #!/bin/bash
 set -euo pipefail
 
+# Load environment variables from the top-level .env file
+set -a
+source $(pwd)/.env
+set +a
+
 # Create deployment directory that will hold configuration files
 OP_DEPLOY_DIR=$2
 mkdir -p ${OP_DEPLOY_DIR} && chmod -R 777 ${OP_DEPLOY_DIR}

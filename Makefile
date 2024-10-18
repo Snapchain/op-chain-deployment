@@ -1,17 +1,4 @@
 ############################
-## Env 
-############################
-
-# TODO: check if this could cause namespace collisions
-# TODO: it may be safer to $(eval include $(CURDIR)/.env) in each of the scripts that need it
-include .env
-include .env.explorer
-include .env.bridge
-# make all variables in the Makefile available to child processes
-export
-
-
-############################
 ## L1 
 ############################
 
@@ -97,12 +84,12 @@ l2-bridge-deploy-l1-multicall:
 ## Launch the OP Bridge UI
 l2-bridge-start:
 	@$(CURDIR)/scripts/l2-bridge/l2-bridge-set-env.sh
-	@docker compose up -d op-bridge-ui
+	@docker compose -f docker/docker-compose-l2.yml up -d op-bridge-ui
 .PHONY: l2-bridge-start
 
 ## Stop the OP Bridge UI
 l2-bridge-stop:
-	@docker compose down op-bridge-ui
+	@docker compose -f docker/docker-compose-l2.yml down op-bridge-ui
 .PHONY: l2-bridge-stop
 
 
@@ -112,10 +99,7 @@ l2-bridge-stop:
 
 ## Launch the OP chain explorer
 l2-explorer-start:
-	@$(CURDIR)/scripts/l2-blockscout/l2-blockscout-set-env.sh
-	docker compose -f docker/docker-compose-l2-explorer.yml up -d backend-db stats-db
-	sleep 5
-	docker compose -f docker/docker-compose-l2-explorer.yml up -d backend frontend stats smart-contract-verifier visualizer sig-provider visualizer-proxy proxy
+	@$(CURDIR)/scripts/l2-explorer/l2-explorer-start.sh
 .PHONY: l2-explorer-start
 
 ## Stop the OP chain explorer and remove the volumes
@@ -126,7 +110,7 @@ l2-explorer-stop: ## Stops all explorer services
 
 ## Show running services for the OP chain explorer
 l2-explorer-ps:
-	docker compose -f docker/docker-compose-l2-explorer.yml ps
+	docker compose -f docker/docker-compose-l2-explorer.yml ps --format "table {{.ID}}\t{{.Name}}\t{{.Status}}\t{{.Ports}}"
 .PHONY: l2-explorer-ps
 
 ## Show logs for the OP chain explorer

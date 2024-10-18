@@ -108,7 +108,7 @@ services:
     ports:
       - "3002:3000"
     env_file:
-      - .env.bridge
+      - ${PWD}/.env.bridge
     restart: unless-stopped
     networks:
       - ops-bedrock_default
