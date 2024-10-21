@@ -33,4 +33,11 @@ DEPLOY_CONFIG_PATH=${OP_CONTRACTS_DIR}/deploy-config/op-devnet-${L2_CHAIN_ID}.js
 jq ".useFaultProofs = ${USE_FAULT_PROOFS}" ${GETTING_STARTED_OUTFILE} > ${DEPLOY_CONFIG_PATH}
 rm ${GETTING_STARTED_OUTFILE}
 echo "Deployment configuration generated at ${DEPLOY_CONFIG_PATH}"
+
+# Update the config file for the custom fields, e.g. batchInboxAddress, finalizationPeriodSeconds
+echo "Updating deployment configuration for custom fields..."
+jq ".batchInboxAddress = \"${BATCH_INBOX_ADDRESS}\"" ${DEPLOY_CONFIG_PATH} > ${DEPLOY_CONFIG_PATH}
+jq ".finalizationPeriodSeconds = ${FINALIZATION_PERIOD_SECONDS}" ${DEPLOY_CONFIG_PATH} > ${DEPLOY_CONFIG_PATH}
+jq ".enableGovernance = ${ENABLE_GOVERNANCE}" ${DEPLOY_CONFIG_PATH} > ${DEPLOY_CONFIG_PATH}
+echo "Updated deployment configuration ${DEPLOY_CONFIG_PATH}"
 echo
