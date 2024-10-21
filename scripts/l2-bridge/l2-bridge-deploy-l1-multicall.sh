@@ -33,6 +33,9 @@ forge create --rpc-url "${L1_RPC_URL}" --private-key "${L1_FUNDED_PRIVATE_KEY}" 
 DEPLOYED_ADDRESS=$(grep "Deployed to:" forge_output.log | awk '{print $3}')
 rm forge_output.log
 
+# Update the .env.bridge file with the deployed address
+sed -i.bak "s/^NEXT_PUBLIC_L1_MULTICALL3_ADDRESS=.*/NEXT_PUBLIC_L1_MULTICALL3_ADDRESS=${DEPLOYED_ADDRESS}/" ../.env.bridge
+
 # Update the .env file with the deployed address
 sed -i.bak "s/^NEXT_PUBLIC_L1_MULTICALL3_ADDRESS=.*/NEXT_PUBLIC_L1_MULTICALL3_ADDRESS=${DEPLOYED_ADDRESS}/" ../.env
 rm ../.env.bak
