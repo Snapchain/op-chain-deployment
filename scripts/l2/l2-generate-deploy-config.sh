@@ -26,18 +26,19 @@ if [ "$DEVNET_L2OO" = true ]; then
 else
   USE_FAULT_PROOFS=true
 fi
+BATCH_INBOX_ADDRESS=${BATCH_INBOX_ADDRESS:-0xff00000000000000000000000000000000042069}
+FINALIZATION_PERIOD_SECONDS=${FINALIZATION_PERIOD_SECONDS:-12}
+ENABLE_GOVERNANCE=${ENABLE_GOVERNANCE:-true}
 
 # Create the config file with the additional fields, e.g. useFaultProofs
 GETTING_STARTED_OUTFILE=${OP_CONTRACTS_DIR}/deploy-config/getting-started.json
 DEPLOY_CONFIG_PATH=${OP_CONTRACTS_DIR}/deploy-config/op-devnet-${L2_CHAIN_ID}.json
-jq ".useFaultProofs = ${USE_FAULT_PROOFS}" ${GETTING_STARTED_OUTFILE} > ${DEPLOY_CONFIG_PATH}
+jq -s '.[0] * .[1]' ${GETTING_STARTED_OUTFILE} <(echo "{
+  \"useFaultProofs\": ${USE_FAULT_PROOFS},
+  \"batchInboxAddress\": \"${BATCH_INBOX_ADDRESS}\",
+  \"finalizationPeriodSeconds\": ${FINALIZATION_PERIOD_SECONDS},
+  \"enableGovernance\": ${ENABLE_GOVERNANCE}
+}") > ${DEPLOY_CONFIG_PATH}
 rm ${GETTING_STARTED_OUTFILE}
 echo "Deployment configuration generated at ${DEPLOY_CONFIG_PATH}"
-
-# Update the config file for the custom fields, e.g. batchInboxAddress, finalizationPeriodSeconds
-echo "Updating deployment configuration for custom fields..."
-jq ".batchInboxAddress = \"${BATCH_INBOX_ADDRESS}\"" ${DEPLOY_CONFIG_PATH} > ${DEPLOY_CONFIG_PATH}
-jq ".finalizationPeriodSeconds = ${FINALIZATION_PERIOD_SECONDS}" ${DEPLOY_CONFIG_PATH} > ${DEPLOY_CONFIG_PATH}
-jq ".enableGovernance = ${ENABLE_GOVERNANCE}" ${DEPLOY_CONFIG_PATH} > ${DEPLOY_CONFIG_PATH}
-echo "Updated deployment configuration ${DEPLOY_CONFIG_PATH}"
 echo
