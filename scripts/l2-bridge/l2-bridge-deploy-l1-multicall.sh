@@ -36,7 +36,3 @@ rm forge_output.log
 # Update the .env.bridge file with the deployed address
 sed -i.bak "s/^NEXT_PUBLIC_L1_MULTICALL3_ADDRESS=.*/NEXT_PUBLIC_L1_MULTICALL3_ADDRESS=${DEPLOYED_ADDRESS}/" ../.env.bridge
 rm ../.env.bridge.bak
-
-# Update the .env file with the deployed address
-sed -i.bak "s/^NEXT_PUBLIC_L1_MULTICALL3_ADDRESS=.*/NEXT_PUBLIC_L1_MULTICALL3_ADDRESS=${DEPLOYED_ADDRESS}/" ../.env
-rm ../.env.bak
