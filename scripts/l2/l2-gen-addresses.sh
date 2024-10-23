@@ -31,7 +31,7 @@ echo "Generated new addresses and updated .env file."
 # Function to fund an address
 fund_address() {
     local address=$1
-    local amount="10ether"
+    local amount=$2
 
     cast send --private-key "$L1_FUNDED_PRIVATE_KEY" --rpc-url "$L1_RPC_URL" \
         --value "$amount" "$address"
@@ -46,8 +46,8 @@ for role in ADMIN BATCHER PROPOSER; do
     address="${!address_var}"
     
     if [[ -n "$address" ]]; then
-        echo "Funding $role address: $address"
-        fund_address "$address"
+        echo "Funding $role address: $address with amount $L1_FUND_AMOUNT"
+        fund_address "$address" "$L1_FUND_AMOUNT"
         echo
     else
         echo "Warning: $role address not found in .env file"
