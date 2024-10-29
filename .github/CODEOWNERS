@@ -1,0 +1,3 @@
+# Default owner for everything in the repo (if no other rule matches)
+*       @Snapchain/all
+
