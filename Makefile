@@ -102,6 +102,11 @@ l2-explorer-start:
 	@$(CURDIR)/scripts/l2-explorer/l2-explorer-start.sh
 .PHONY: l2-explorer-start
 
+## Restart the OP chain explorer (without deleting the volumes)
+l2-explorer-restart:
+	@$(CURDIR)/scripts/l2-explorer/l2-explorer-restart.sh
+.PHONY: l2-explorer-restart
+
 ## Stop the OP chain explorer and remove the volumes
 l2-explorer-stop: ## Stops all explorer services
 	docker compose -f docker/docker-compose-l2-explorer.yml stop proxy visualizer-proxy sig-provider visualizer smart-contract-verifier stats frontend backend stats-db backend-db
