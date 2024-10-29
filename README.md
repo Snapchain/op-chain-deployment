@@ -1,5 +1,11 @@
 # OP Chain Deployment
 
+## Fetch and update the submodules
+
+```
+git submodule update --init --recursive
+```
+
 ## Setup environment variables
 
 ```
@@ -8,15 +14,7 @@ cp .env.explorer.example .env.explorer
 cp .env.bridge.example .env.bridge
 ```
 
-### Fetch and update the submodules
-
-```
-git submodule update --init --recursive
-```
-
-### Update the environment variables
-
-Update environment variables in the `.env` files.
+Then update environment variables in the `.env` files.
 
 ## Local L1 chain
 
