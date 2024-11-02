@@ -71,6 +71,15 @@ l2-verify:
 	@$(CURDIR)/scripts/l2/l2-verify.sh
 .PHONY: l2-verify
 
+## Restart the OP Node
+l2-op-node-restart:
+	@$(CURDIR)/scripts/l2/l2-op-node-restart.sh
+.PHONY: l2-op-node-restart
+
+## Restart the OP chain
+l2-restart:
+	@$(CURDIR)/scripts/l2/l2-restart.sh
+.PHONY: l2-restart
 
 ############################
 ## L2 Bridge UI
@@ -92,6 +101,10 @@ l2-bridge-stop:
 	@docker compose -f docker/docker-compose-l2.yml down op-bridge-ui
 .PHONY: l2-bridge-stop
 
+## Restart the OP Bridge UI
+l2-bridge-restart:
+	@$(CURDIR)/scripts/l2-bridge/l2-bridge-restart.sh
+.PHONY: l2-bridge-restart
 
 ############################
 ## L2 Explorer
@@ -117,3 +130,8 @@ l2-explorer-ps:
 l2-explorer-logs:
 	docker compose -f docker/docker-compose-l2-explorer.yml logs -f
 .PHONY: l2-explorer-logs
+
+## Restart the OP chain explorer
+l2-explorer-restart:
+	@$(CURDIR)/scripts/l2-explorer/l2-explorer-restart.sh
+.PHONY: l2-explorer-restart
