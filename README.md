@@ -60,7 +60,7 @@ For the local L1, the L1 chain ID and pre-funded account private key can be retr
 - `L1_CHAIN_ID`
 - `L1_FUNDED_PRIVATE_KEY`
 
-Keep empty string before the Finality Gadget is up. After the Finality Gadget is up, please update this value and restart the L2 op-node.
+Please update this value after the Finality Gadget is up, and restart the L2 op-node.
 - `BBN_FINALITY_GADGET_RPC`
 
 ### Launch L2
@@ -73,7 +73,7 @@ after it's up, you can test with:
 
 ```bash
 make l2-verify # on the L2 server
-cast block latest --rpc-url http://<l2-server-ip>:9545 # from anywhere
+cast block latest --rpc-url http://<l2-server-ip>:9545 # from anywhere (with foundry installed)
 ```
 
 You can also access the explorer at http://<l2-server-ip>:3001/ and bridge UI at http://<l2-server-ip>:3002/
