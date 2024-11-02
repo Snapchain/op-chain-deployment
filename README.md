@@ -80,4 +80,26 @@ You can also access the explorer at http://<l2-server-ip>:3001/ and bridge UI at
 
 ### Restart L2
 
-TODO: add the command to restart the L2
+only restart l2 op-node
+
+```bash
+make l2-op-node-restart
+```
+
+restart all l2 components
+
+```bash
+make l2-restart
+```
+
+restart l2 explorer
+
+```bash
+make l2-explorer-restart
+```
+
+restart l2 bridge
+
+```bash
+make l2-bridge-restart
+```
