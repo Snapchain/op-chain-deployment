@@ -63,7 +63,7 @@ l2-prepare:
 
 ## Start the OP chain core components (op-node, op-geth, proposer, batcher)
 l2-start:
-	@$(CURDIR)/scripts/l2/l2-start.sh $(CURDIR)/optimism
+	@$(CURDIR)/scripts/l2/l2-start.sh
 .PHONY: l2-start
 
 ## Verify the OP chain is running
@@ -78,7 +78,8 @@ l2-op-node-restart:
 
 ## Restart the OP chain
 l2-restart:
-	@$(CURDIR)/scripts/l2/l2-restart.sh
+	@docker compose -f docker/docker-compose-l2.yml stop l2 op-node op-proposer op-batcher
+	@$(CURDIR)/scripts/l2/l2-start.sh
 .PHONY: l2-restart
 
 ############################
