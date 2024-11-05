@@ -35,21 +35,6 @@ else
   export DG_TYPE=254
   export PROPOSAL_INTERVAL=12s
 fi
-if [ "$DEVNET_ALTDA" = true ]; then
-  export ALTDA_ENABLED=true
-  export DA_TYPE=calldata
-else
-  export ALTDA_ENABLED=false
-  export DA_TYPE=blobs
-fi
-if [ "$GENERIC_ALTDA" = true ]; then
-  export ALTDA_GENERIC_DA=true
-  export ALTDA_SERVICE=true
-else
-  export ALTDA_GENERIC_DA=false
-  export ALTDA_SERVICE=false
-fi
-echo
 
 # Launch the OP L2
 echo "Launching the OP L2..."
