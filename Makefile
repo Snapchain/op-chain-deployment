@@ -136,8 +136,3 @@ l2-explorer-ps:
 l2-explorer-logs:
 	docker compose -f docker/docker-compose-l2-explorer.yml logs -f
 .PHONY: l2-explorer-logs
-
-## Restart the OP chain explorer
-l2-explorer-restart:
-	@$(CURDIR)/scripts/l2-explorer/l2-explorer-restart.sh
-.PHONY: l2-explorer-restart
