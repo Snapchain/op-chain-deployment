@@ -86,6 +86,6 @@ You can also verify the L2 chain with:
 cast block latest --rpc-url http://<l2-server-ip>:9545 # (need to have foundry installed)
 ```
 
-You can also access the explorer at `http://<l2-server-ip>:3001/` and bridge UI at `http://<l2-server-ip>:3002/`.
+You can also access the explorer at `http://<l2-server-ip>` and bridge UI at `http://<l2-server-ip>:3002/`.
 
 You can also bridge funds from L1 to L2 via the bridge UI.
