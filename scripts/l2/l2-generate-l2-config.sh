@@ -56,7 +56,7 @@ echo "Authentication key created at ${JWT_SECRET_PATH}"
 echo
 
 # Move the deployment and deploy-config files to the .deploy directory
-echo "Moving the deployment and deploy-config files to the .deploy directory..."
-mv $DEPLOYMENT_OUTFILE $(pwd)/.deploy/op-devnet-deployments-${L2_CHAIN_ID}.json
-mv $DEPLOY_CONFIG_PATH $(pwd)/.deploy/op-devnet-deploy-config-${L2_CHAIN_ID}.json
+echo "Moving the deployment and deploy-config files to the ${OP_DEPLOY_DIR} directory..."
+mv $DEPLOYMENT_OUTFILE ${OP_DEPLOY_DIR}/op-devnet-deployments-${L2_CHAIN_ID}.json
+mv $DEPLOY_CONFIG_PATH ${OP_DEPLOY_DIR}/op-devnet-deploy-config-${L2_CHAIN_ID}.json
 echo
