@@ -1,4 +1,10 @@
-# OP Chain Deployment
+# OP Chain Deployment (with BTC staking support)
+
+This repo contains:
+- commands to deploy an OP-Stack chain with Babylon BTC staking support.
+- commands to deploy a local L1 chain to help with development.
+
+This repo is supposed to be used with the `op-chain-deployment` [repo](https://github.com/Snapchain/op-chain-deployment) together, to integrate the BTC staking finality gadget into the deployed OP-Stack chain. For more context, please read [this discussion](https://github.com/ethereum-optimism/specs/discussions/218).
 
 ## Fetch and update the submodules
 
@@ -6,43 +12,40 @@
 git submodule update --init --recursive
 ```
 
-## Setup environment variables
-
-```
-cp .env.example .env
-cp .env.explorer.example .env.explorer
-cp .env.bridge.example .env.bridge
-```
-
-Then update environment variables in the `.env` files.
-
 ## Local L1 chain
 
-### Setup the network parameters
+As a pre-requisite, install and start `kurtosis`. You also need to have `jq` and `yq` installed.
+
+Then set up the network parameters:
 
 ```bash
 make l1-configure
 ```
 
-**Note:** It will generate a new wallet `configs/l1/l1-prefund-wallet.json` and update the `configs/l1/network_params.yaml` file with the address to use for the prefunded account. You can update the `configs/l1/network_params.yaml` file manually to use an existing wallet.
+This will generate a new wallet `configs/l1/l1-prefund-wallet.json` and pre-fund it with ETH at genesis. If you don't want to use the auto-generated wallet, you can update the `configs/l1/network_params.yaml` file manually to use your own wallet address.
 
-### Launch with kurtosis and ethereum-package
+You can also find the L1 chain ID and RPC ports for the JSON RPC and Beacon API in the `network_params.yaml` file ([reference](https://github.com/ethpandaops/ethereum-package
+)):
+- JSON RPC: `http://localhost:<EL_PORT_START + 2>`
+- Beacon API: `http://localhost:<CL_PORT_START + 1>`
+
+Then launch the L1 chain with:
 
 ```bash
 make l1-launch
 ```
 
-### Remove the local L1 chain
+Then you can verify the L1 chain is running with:
+
+```bash
+make l1-verify
+```
+
+If you want to remove the L1 chain, you can do so with:
 
 ```bash
 make l1-remove
 ```
-
-**Note:** If you launch the local L1 chain with kurtosis, you must set the following environment variables with the values from the `configs/network_params_geth_lighthouse.yaml` file:
-
-- Update the `L1_CHAIN_ID` with the value of the `network_id` in the `network_params` section
-- Update the `L1_RPC_URL` to `http://localhost:<EL_PORT_START + 2>`, where `EL_PORT_START` is the value of `public_port_start` in the `el` section
-- Update the `L1_BEACON_URL` to `http://localhost:<CL_PORT_START + 1>`, where `CL_PORT_START` is the value of `public_port_start` in the `cl` section
 
 ## Launch OP Stack L2
 
@@ -54,14 +57,18 @@ cp .env.explorer.example .env.explorer
 cp .env.bridge.example .env.bridge
 ```
 
-For the local L1, the L1 chain ID and pre-funded account private key can be retrieved from the L1 server (see steps above).
-- `L1_CHAIN_ID`
-- `L1_FUNDED_PRIVATE_KEY`
+Update the `.env` file with the correct values.
+- `L1_RPC_URL`: the L1 JSON-RPC URL.
+- `L1_BEACON_URL`: the L1 Beacon API that [supports blobs](https://docs.optimism.io/builders/node-operators/management/blobs) (Note: not many RPC providers support this).
+- `L1_CHAIN_ID`: the L1 chain ID.
+- `L1_FUNDED_PRIVATE_KEY`: this will be used to fund a few L2 admin accounts with ETH.
 
-Please update this value after the Finality Gadget is up, and restart the L2 op-node.
-- `BBN_FINALITY_GADGET_RPC`
+Update the `.env.explorer` file with the correct values.
+- `COMMON_HOST`: the IP address of the server running the L2 components.
 
-### Launch L2
+Note that you don't need to update the `.env.bridge` file b/c it's set in `make l2-launch`.
+
+### Launch L2 (including the bridge and block explorer)
 
 ```bash
 make l2-launch
@@ -70,34 +77,15 @@ make l2-launch
 after it's up, you can test with:
 
 ```bash
-make l2-verify # on the L2 server
-cast block latest --rpc-url http://<l2-server-ip>:9545 # from anywhere (with foundry installed)
+make l2-verify
 ```
 
-You can also access the explorer at http://<l2-server-ip>:3001/ and bridge UI at http://<l2-server-ip>:3002/
-
-### Restart L2
-
-only restart l2 op-node
+You can also verify the L2 chain with:
 
 ```bash
-make l2-op-node-restart
+cast block latest --rpc-url http://<l2-server-ip>:9545 # (need to have foundry installed)
 ```
 
-restart all l2 components
+You can also access the explorer at `http://<l2-server-ip>:3001/` and bridge UI at `http://<l2-server-ip>:3002/`.
 
-```bash
-make l2-restart
-```
-
-restart l2 explorer
-
-```bash
-make l2-explorer-restart
-```
-
-restart l2 bridge
-
-```bash
-make l2-bridge-restart
-```
+You can also bridge funds from L1 to L2 via the bridge UI.
