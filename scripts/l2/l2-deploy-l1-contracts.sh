@@ -49,5 +49,5 @@ DEPLOYMENT_OUTFILE=${OP_CONTRACTS_DIR}/deployments/op-devnet-${L2_CHAIN_ID}.json
   DEPLOY_CONFIG_PATH=${OP_CONTRACTS_DIR}/deploy-config/op-devnet-${L2_CHAIN_ID}.json \
   forge script $OP_CONTRACTS_DIR/scripts/deploy/Deploy.s.sol:Deploy \
   --private-key "$GS_ADMIN_PRIVATE_KEY" \
-  --broadcast --rpc-url "$L1_RPC_URL" --slow
+  --broadcast --rpc-url "$L1_RPC_URL" --slow --non-interactive
 echo
