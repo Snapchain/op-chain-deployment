@@ -54,3 +54,9 @@ echo "Creating an authentication key..."
 openssl rand -hex 32 > ${JWT_SECRET_PATH}
 echo "Authentication key created at ${JWT_SECRET_PATH}"
 echo
+
+# Move the deployment and deploy-config files to the .deploy directory
+echo "Moving the deployment and deploy-config files to the .deploy directory..."
+mv $DEPLOYMENT_OUTFILE $(pwd)/.deploy/op-devnet-deployments-${L2_CHAIN_ID}.json
+mv $DEPLOY_CONFIG_PATH $(pwd)/.deploy/op-devnet-deploy-config-${L2_CHAIN_ID}.json
+echo

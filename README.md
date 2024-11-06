@@ -74,7 +74,7 @@ make l2-verify # on the L2 server
 cast block latest --rpc-url http://<l2-server-ip>:9545 # from anywhere (with foundry installed)
 ```
 
-You can also access the explorer at http://<l2-server-ip>:3001/ and bridge UI at http://<l2-server-ip>:3002/
+You can also access the explorer at http://<l2-server-ip> and bridge UI at http://<l2-server-ip>:3002
 
 ### Restart L2
 

@@ -19,8 +19,6 @@ fi
 
 # Check optional environment variables
 DEVNET_L2OO=${DEVNET_L2OO:-true}
-DEVNET_ALTDA=${DEVNET_ALTDA:-false}
-GENERIC_ALTDA=${GENERIC_ALTDA:-false}
 if [ "$DEVNET_L2OO" = true ]; then
   USE_FAULT_PROOFS=false
 else
