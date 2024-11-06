@@ -90,3 +90,11 @@ You can also access the explorer at `http://<l2-server-ip>` and bridge UI at `ht
 
 You can also bridge funds from L1 to L2 via the bridge UI.
 
+Here are a few useful commands to restart the L2 components:
+
+```bash
+make l2-op-node-restart # only restart l2 op-node
+make l2-restart # restart all l2 components
+make l2-explorer-restart # restart l2 explorer
+make l2-bridge-restart # restart l2 bridge
+```
