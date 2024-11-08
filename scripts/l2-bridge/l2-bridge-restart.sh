@@ -1,9 +1,6 @@
 #!/bin/bash
 set -euo pipefail
 
-# Run the l2-bridge-set-env.sh script
-$(pwd)/scripts/l2-bridge/l2-bridge-set-env.sh
-
 # Source the .env file
 set -a
 source $(pwd)/.env.bridge
