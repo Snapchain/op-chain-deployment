@@ -1,9 +1,6 @@
 #!/bin/bash
 set -euo pipefail
 
-# Run the l2-blockscout-set-env.sh script
-$(pwd)/scripts/l2-explorer/l2-blockscout-set-env.sh
-
 # Source the .env.explorer file
 set -a
 source $(pwd)/.env
