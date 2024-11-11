@@ -82,6 +82,12 @@ l2-restart:
 	@$(CURDIR)/scripts/l2/l2-start.sh
 .PHONY: l2-restart
 
+## Teardown the OP chain
+l2-teardown:
+	# TODO: add l2-stop and other cleanup steps
+	@$(CURDIR)/scripts/l2/l2-teardown.sh
+.PHONY: l2-teardown
+
 ############################
 ## L2 Bridge UI
 ############################
