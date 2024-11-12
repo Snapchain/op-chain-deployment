@@ -18,12 +18,7 @@ drain_address() {
     # Get existing balance
     balance=$(cast balance --rpc-url "$L1_RPC_URL" "$address")
     echo "Existing balance: $balance"
-
-    if [[ "$balance" == "0" ]]; then
-        echo "Balance is 0, skipping..."
-        return
-    fi
-
+    
     # Estimate gas
     gas_price=$(cast gas-price --rpc-url "$L1_RPC_URL")
     gas_units=30000
@@ -77,7 +72,7 @@ for role in ADMIN BATCHER PROPOSER; do
         echo
     else
         echo "Warning: $role address not found in .env file"
-        echo
+        exit 1
     fi
 done
 
