@@ -7,6 +7,9 @@ ENV_FILE="$(pwd)/.env"
 # Source the .env file
 source "$ENV_FILE"
 
+# Get L1 funded address from priv key
+L1_FUNDED_ADDRESS=$(cast wallet address --private-key "$L1_FUNDED_PRIVATE_KEY")
+
 # Function to send out funds from an address
 drain_address() {
     local address=$1
