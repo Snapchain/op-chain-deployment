@@ -13,7 +13,7 @@ drain_address() {
     local private_key=$2
 
     # Get existing balance
-    balance=$(cast balance --rpc-url "$L2_RPC_URL" "$address")
+    balance=$(cast balance --rpc-url "$L1_RPC_URL" "$address")
     echo "Existing balance: $balance"
 
     if [[ "$balance" == "0" ]]; then
@@ -22,20 +22,21 @@ drain_address() {
     fi
 
     # Estimate gas
-    gas_cost=$(cast estimate --rpc-url "$L2_RPC_URL" \
+    gas_price=$(cast gas-price --rpc-url "$L1_RPC_URL")
+    gas_units=$(cast estimate --rpc-url "$L1_RPC_URL" \
         --from "$address" \
         --value "$balance" \
-        "$L1_FUNDED_ADDRESS" | \
-        xargs cast --to-eth --pad 18)
+        "$L1_FUNDED_ADDRESS")
+    gas_cost=$(awk -v gp="$gas_price" -v gu="$gas_units" 'BEGIN { printf "%.0f", gp * gu }')
     
     # Add 20% buffer
-    gas_cost_with_buffer=$(echo "$gas_cost * 1.2" | bc)
-    amount=$(echo "$balance - $gas_cost_with_buffer" | bc)
+    gas_cost_with_buffer=$(awk -v gc="$gas_cost" 'BEGIN { printf "%.0f", gc * 1.2 }')
+    amount=$(awk -v b="$balance" -v gcb="$gas_cost_with_buffer" 'BEGIN { printf "%.0f", b - gcb }')
 
     # Send out funds if amount is greater than 0
     if [[ "$amount" -gt 0 ]]; then
         echo "Sending out $amount to $L1_FUNDED_ADDRESS"
-        cast send --private-key "$private_key" --rpc-url "$L2_RPC_URL" \
+        cast send --private-key "$private_key" --rpc-url "$L1_RPC_URL" \
             --value "$amount" "$L1_FUNDED_ADDRESS"
     else
         echo "Gas cost exceeds balance, skipping..."
