@@ -23,7 +23,7 @@ drain_address() {
 
     # Estimate gas
     gas_price=$(cast gas-price --rpc-url "$L1_RPC_URL")
-    gas_units=21000
+    gas_units=30000
     gas_cost=$(awk -v gp="$gas_price" -v gu="$gas_units" 'BEGIN { printf "%.0f", gp * gu }')
     gas_cost_with_buffer=$(awk -v gc="$gas_cost" 'BEGIN { printf "%.0f", gc * 1.2 }')
     echo "Gas cost (+20% buffer): $gas_cost_with_buffer"
