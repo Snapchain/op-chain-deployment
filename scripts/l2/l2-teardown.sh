@@ -23,21 +23,17 @@ drain_address() {
 
     # Estimate gas
     gas_price=$(cast gas-price --rpc-url "$L1_RPC_URL")
-    gas_units=$(cast estimate --rpc-url "$L1_RPC_URL" \
-        --from "$address" \
-        --value "$balance" \
-        "$L1_FUNDED_ADDRESS")
+    gas_units=21000
     gas_cost=$(awk -v gp="$gas_price" -v gu="$gas_units" 'BEGIN { printf "%.0f", gp * gu }')
-    
-    # Add 20% buffer
     gas_cost_with_buffer=$(awk -v gc="$gas_cost" 'BEGIN { printf "%.0f", gc * 1.2 }')
-    amount=$(awk -v b="$balance" -v gcb="$gas_cost_with_buffer" 'BEGIN { printf "%.0f", b - gcb }')
+    echo "Gas cost (+20% buffer): $gas_cost_with_buffer"
 
     # Send out funds if amount is greater than 0
+    amount=$(awk -v b="$balance" -v gcb="$gas_cost_with_buffer" 'BEGIN { printf "%.0f", b - gcb }')
     if [[ "$amount" -gt 0 ]]; then
         echo "Sending out $amount to $L1_FUNDED_ADDRESS"
         cast send --private-key "$private_key" --rpc-url "$L1_RPC_URL" \
-            --value "$amount" "$L1_FUNDED_ADDRESS"
+            --value "$amount" "$L1_FUNDED_ADDRESS" --gas-limit "$gas_units" --gas-price "$gas_price"
     else
         echo "Gas cost exceeds balance, skipping..."
     fi
