@@ -21,6 +21,9 @@ if [ "$BBN_FINALITY_GADGET_RPC" != "" ]; then
     echo "Setting babylonFinalityGadgetRpc in rollup.json with value: $BBN_FINALITY_GADGET_RPC"
     sed -i.bak 's|"babylonFinalityGadgetRpc":.*|"babylonFinalityGadgetRpc": "'"$BBN_FINALITY_GADGET_RPC"'"|' $ROLLUP_CONFIG
     rm $ROLLUP_CONFIG.bak
+else
+    echo "BBN_FINALITY_GADGET_RPC is not set in the .env file. If the Finality Gadget is up, please set it to the gRPC URL and try again."
+    exit 1
 fi
 
 # get the babylonFinalityGadgetRpc from rollup.json
