@@ -15,6 +15,21 @@ docker compose -f docker/docker-compose-l2.yml stop op-node
 # set L2OO or DGF env vars
 post_deployment_setup_env_vars $(pwd)/.deploy/op-devnet-deployments-${L2_CHAIN_ID}.json $DEVNET_L2OO
 
+ROLLUP_CONFIG=$(pwd)/.deploy/rollup.json
+# set babylonFinalityGadgetRpc in rollup.json
+if [ "$BBN_FINALITY_GADGET_RPC" != "" ]; then
+    echo "Setting babylonFinalityGadgetRpc in rollup.json with value: $BBN_FINALITY_GADGET_RPC"
+    sed -i.bak 's|"babylonFinalityGadgetRpc":.*|"babylonFinalityGadgetRpc": "'"$BBN_FINALITY_GADGET_RPC"'"|' $ROLLUP_CONFIG
+    rm $ROLLUP_CONFIG.bak
+fi
+
+# get the babylonFinalityGadgetRpc from rollup.json
+FG_URL_IN_ROLLUP=$(jq -r '.babylonFinalityGadgetRpc' $ROLLUP_CONFIG)
+if [ "$FG_URL_IN_ROLLUP" != "$BBN_FINALITY_GADGET_RPC" ]; then
+    echo "babylonFinalityGadgetRpc in rollup.json ($FG_URL_IN_ROLLUP) is not equal to the value in .env ($BBN_FINALITY_GADGET_RPC)"
+    exit 1
+fi
+
 # Start the OP Node
 echo "Starting the OP Node..."
 docker compose -f docker/docker-compose-l2.yml up -d op-node
