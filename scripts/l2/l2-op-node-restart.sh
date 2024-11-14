@@ -17,7 +17,7 @@ post_deployment_setup_env_vars $(pwd)/.deploy/op-devnet-deployments-${L2_CHAIN_I
 
 ROLLUP_CONFIG=$(pwd)/.deploy/rollup.json
 # set babylonFinalityGadgetRpc in rollup.json
-if [ "$BBN_FINALITY_GADGET_RPC" != "" ]; then
+if [ -n "$BBN_FINALITY_GADGET_RPC" ]; then
     echo "Setting babylonFinalityGadgetRpc in rollup.json with value: $BBN_FINALITY_GADGET_RPC"
     sed -i.bak 's|"babylonFinalityGadgetRpc":.*|"babylonFinalityGadgetRpc": "'"$BBN_FINALITY_GADGET_RPC"'"|' $ROLLUP_CONFIG
     rm $ROLLUP_CONFIG.bak
