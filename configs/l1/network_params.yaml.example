@@ -11,7 +11,7 @@ network_params:
 port_publisher:
   el:
     enabled: true
-    public_port_start: 18543
+    public_port_start: 18543 # JSON-RPC port 18545
   cl:
     enabled: true
-    public_port_start: 15051
+    public_port_start: 15051 # Beacon API port 15052
