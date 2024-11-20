@@ -16,15 +16,20 @@ docker compose -f docker/docker-compose-l2.yml stop op-node
 post_deployment_setup_env_vars $(pwd)/.deploy/op-devnet-deployments-${L2_CHAIN_ID}.json $DEVNET_L2OO
 
 ROLLUP_CONFIG=$(pwd)/.deploy/rollup.json
-# set babylonFinalityGadgetRpc in rollup.json
-echo "Setting babylonFinalityGadgetRpc in rollup.json with value: $BBN_FINALITY_GADGET_RPC"
-sed -i.bak 's|"babylonFinalityGadgetRpc":.*|"babylonFinalityGadgetRpc": "'"$BBN_FINALITY_GADGET_RPC"'"|' $ROLLUP_CONFIG
+# set babylon_finality_gadget_rpc in rollup.json
+if [ -z "$BBN_FINALITY_GADGET_RPC" ]; then
+    echo "Setting babylon_finality_gadget_rpc with empty value in rollup.json"
+else
+    echo "Setting babylon_finality_gadget_rpc with value $BBN_FINALITY_GADGET_RPC in rollup.json"
+fi
+
+sed -i.bak 's|"babylon_finality_gadget_rpc":.*|"babylon_finality_gadget_rpc": "'"$BBN_FINALITY_GADGET_RPC"'"|' $ROLLUP_CONFIG
 rm $ROLLUP_CONFIG.bak
 
-# get the babylonFinalityGadgetRpc from rollup.json
-FG_URL_IN_ROLLUP=$(jq -r '.babylonFinalityGadgetRpc' $ROLLUP_CONFIG)
+# get the babylon_finality_gadget_rpc from rollup.json
+FG_URL_IN_ROLLUP=$(jq -r '.babylon_finality_gadget_rpc' $ROLLUP_CONFIG)
 if [ "$FG_URL_IN_ROLLUP" != "$BBN_FINALITY_GADGET_RPC" ]; then
-    echo "babylonFinalityGadgetRpc in rollup.json ($FG_URL_IN_ROLLUP) is not equal to the value in .env ($BBN_FINALITY_GADGET_RPC)"
+    echo "ERROR: value mismatch - rollup.json: babylon_finality_gadget_rpc($FG_URL_IN_ROLLUP), .env: BBN_FINALITY_GADGET_RPC($BBN_FINALITY_GADGET_RPC)"
     exit 1
 fi
 
