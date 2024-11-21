@@ -18,7 +18,7 @@ create_dns_records() {
         {
             \"type\": \"A\",
             \"name\": \"${name}.${CLOUDFLARE_DNS_SUBDOMAIN}\",
-            \"content\": \"$FINALITY_SYSTEM_SERVER_IP\",
+            \"content\": \"$L2_SYSTEM_SERVER_IP\",
             \"proxied\": false
         }"
     done
