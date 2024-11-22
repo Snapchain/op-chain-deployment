@@ -142,6 +142,6 @@ l2-explorer-logs:
 	docker compose -f docker/docker-compose-l2-explorer.yml logs -f
 .PHONY: l2-explorer-logs
 
-l2-dns-setup:
-	@$(CURDIR)/scripts/l2/dns-setup.sh
-.PHONY: l2-dns-setup
+l2-proxy-setup:
+	@$(CURDIR)/scripts/l2/proxy-setup.sh
+.PHONY: l2-proxy-setup
