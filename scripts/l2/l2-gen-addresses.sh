@@ -24,7 +24,7 @@ check_addresses_exist() {
 # If addresses already exist, first backup the .env file and run teardown
 if check_addresses_exist; then
   echo "Addresses already exist in .env file. Backing up and running teardown."
-  local timestamp=$(date +%s)
+  timestamp=$(date +%s)
   cp "$ENV_FILE" "$ENV_FILE.bak-$timestamp"
   ./l2-teardown.sh
   echo "Teardown complete."
