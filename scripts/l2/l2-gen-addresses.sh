@@ -3,6 +3,7 @@ set -euo pipefail
 
 # Set the path to the wallets.sh script
 WALLETS_SCRIPT="$(pwd)/optimism/packages/contracts-bedrock/scripts/getting-started/wallets.sh"
+TEARDOWN_SCRIPT="$(pwd)/scripts/l2/l2-teardown.sh"
 
 # Run the wallets.sh script and capture its output
 output=$($WALLETS_SCRIPT)
@@ -26,7 +27,7 @@ if check_addresses_exist; then
   echo "Addresses already exist in .env file. Backing up and running teardown."
   timestamp=$(date +%s)
   cp "$ENV_FILE" "$ENV_FILE.bak-$timestamp"
-  ./l2-teardown.sh
+  "$TEARDOWN_SCRIPT"
   echo "Teardown complete."
 fi
 
