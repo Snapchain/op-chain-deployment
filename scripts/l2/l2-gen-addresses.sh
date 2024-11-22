@@ -10,7 +10,7 @@ output=$($WALLETS_SCRIPT)
 # Path to the .env file
 ENV_FILE="$(pwd)/.env"
 
-# Check if addresses already exist in the .env file
+# Check if any addresses already exist in the .env file
 check_addresses_exist() {
   for role in ADMIN BATCHER PROPOSER; do
     if grep -q "^GS_${role}_ADDRESS=" "$ENV_FILE" || \
@@ -21,27 +21,31 @@ check_addresses_exist() {
   return 1
 }
 
+# If addresses already exist, first backup the .env file and run teardown
 if check_addresses_exist; then
-  echo "Error: Addresses or private keys already exist in .env file. Please remove them first."
-  exit 1
-else
-  # If not, process the output and update the .env file
-  echo "$output" | while IFS= read -r line; do
-      if [[ $line == export\ GS_* ]]; then
-          # Extract variable name and value
-          var_name=$(echo "$line" | cut -d'=' -f1 | cut -d' ' -f2)
-          var_value=$(echo "$line" | cut -d'=' -f2-)
-          
-          # Update or add the variable in the .env file
-          if grep -q "^$var_name=" "$ENV_FILE"; then
-              sed -i.bak "s|^$var_name=.*|$var_name=$var_value|" "$ENV_FILE" && rm "${ENV_FILE}.bak"
-          else
-              echo "$var_name=$var_value" >> "$ENV_FILE"
-          fi
-      fi
-  done
-  echo "Generated new addresses and updated .env file."
+  echo "Addresses already exist in .env file. Backing up and running teardown."
+  local timestamp=$(date +%s)
+  cp "$ENV_FILE" "$ENV_FILE.bak-$timestamp"
+  ./l2-teardown.sh
+  echo "Teardown complete."
 fi
+
+# Process the output and update the .env file
+echo "$output" | while IFS= read -r line; do
+    if [[ $line == export\ GS_* ]]; then
+        # Extract variable name and value
+        var_name=$(echo "$line" | cut -d'=' -f1 | cut -d' ' -f2)
+        var_value=$(echo "$line" | cut -d'=' -f2-)
+        
+        # Update or add the variable in the .env file
+        if grep -q "^$var_name=" "$ENV_FILE"; then
+            sed -i.bak "s|^$var_name=.*|$var_name=$var_value|" "$ENV_FILE" && rm "${ENV_FILE}.bak"
+        else
+            echo "$var_name=$var_value" >> "$ENV_FILE"
+        fi
+    fi
+done
+echo "Generated new addresses and updated .env file."
 
 # Function to check address balance
 check_address_balance() {
