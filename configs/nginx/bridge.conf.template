@@ -3,8 +3,8 @@ server {
     listen 443 ssl;
     server_name bridge.${CERTBOT_DOMAIN_SUFFIX};
 
-    ssl_certificate /etc/letsencrypt/live/bridge.${CERTBOT_DOMAIN_SUFFIX}/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/bridge.${CERTBOT_DOMAIN_SUFFIX}/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/${CERTBOT_DOMAIN_SUFFIX}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/${CERTBOT_DOMAIN_SUFFIX}/privkey.pem;
 
     location / {
         proxy_pass http://localhost:3002; # bridge UI port

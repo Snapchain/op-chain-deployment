@@ -2,8 +2,8 @@ server {
     listen 443 ssl;
     server_name explorer.${CERTBOT_DOMAIN_SUFFIX};
 
-    ssl_certificate /etc/letsencrypt/live/explorer.${CERTBOT_DOMAIN_SUFFIX}/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/explorer.${CERTBOT_DOMAIN_SUFFIX}/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/${CERTBOT_DOMAIN_SUFFIX}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/${CERTBOT_DOMAIN_SUFFIX}/privkey.pem;
 
     location ~ ^/(api|socket|sitemap.xml|auth/auth0|auth/auth0/callback|auth/logout) {
         proxy_pass http://localhost:8088;
