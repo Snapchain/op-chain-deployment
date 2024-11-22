@@ -80,7 +80,7 @@ for role in ADMIN BATCHER PROPOSER; do
     address="${!address_var}"
     
     if [[ -n "$address" ]]; then
-        local balance=$(check_address_balance "$address")
+        balance=$(check_address_balance "$address")
         if [[ "$balance" == "0" ]]; then
             echo "Funding $role address: $address with amount $L1_FUND_AMOUNT"
             fund_address "$address" "$L1_FUND_AMOUNT"
