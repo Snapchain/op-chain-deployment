@@ -86,8 +86,8 @@ for role in ADMIN BATCHER PROPOSER; do
             fund_address "$address" "$L1_FUND_AMOUNT"
             echo
         else
-            echo "$role address: $address already funded"
-            echo
+            echo "Error: $role address already funded: $address"
+            exit 1
         fi
     else
         echo "Warning: $role address not found in .env file"
