@@ -18,6 +18,7 @@ docker compose -f docker/docker-compose-l2.yml up -d l2
 # Wait for the OP L2 to be available
 echo "Waiting for OP L2 to be available..."
 wait_up 9545
+wait_up 9546
 sleep 5
 echo
 

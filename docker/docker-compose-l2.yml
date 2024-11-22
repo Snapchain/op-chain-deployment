@@ -4,6 +4,7 @@ services:
     image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-geth:v1.101408.0
     ports:
       - "9545:8545"
+      - "9546:8546"
     volumes:
       - "l2_data:/db"
       - "${PWD}/.deploy/genesis.json:/genesis.json"
