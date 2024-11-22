@@ -19,8 +19,11 @@ check_addresses_exist() {
   for role in ADMIN BATCHER PROPOSER; do
     address_var="GS_${role}_ADDRESS"
     private_key_var="GS_${role}_PRIVATE_KEY"
+    address="${!address_var}"
+    private_key="${!private_key_var}"
+    echo "$role: address=$address, private_key=$private_key"
 
-    if [[ -n "${!address_var}" ]] || [[ -n "${!private_key_var}" ]]; then
+    if [[ -n "$address" ]] || [[ -n "$private_key" ]]; then
       return 0
     fi
   done
