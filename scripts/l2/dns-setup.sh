@@ -33,5 +33,22 @@ create_dns_records() {
         }"
 }
 
-# RPC, Bridge, Explorer
+# 1. create the DNS records for the subdomains
+# (RPC, Bridge, Explorer)
 create_dns_records "rpc" "bridge" "explorer"
+
+# 2. obtain the SSL certificate for each subdomain
+# the certs will be stored in /etc/letsencrypt/live/${CERTBOT_DOMAIN_SUFFIX}
+# 
+# note that Certbot creates a single certificate that's valid for all those 
+# domains (called a SAN - Subject Alternative Names certificate)
+# 
+# after running the command, you can verify by:
+#   sudo openssl x509 -in /etc/letsencrypt/live/${CERTBOT_DOMAIN_SUFFIX}/fullchain.pem -text | grep DNS:
+# 
+# reference: https://eff-certbot.readthedocs.io/en/latest/using.html
+sudo certbot certonly --nginx --non-interactive --agree-tos -m ${CERTBOT_EMAIL} \
+  --cert-name ${CERTBOT_DOMAIN_SUFFIX} \
+  -d rpc.${CERTBOT_DOMAIN_SUFFIX} \
+  -d bridge.${CERTBOT_DOMAIN_SUFFIX} \
+  -d explorer.${CERTBOT_DOMAIN_SUFFIX}
