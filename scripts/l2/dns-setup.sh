@@ -47,8 +47,22 @@ create_dns_records "rpc" "bridge" "explorer"
 #   sudo openssl x509 -in /etc/letsencrypt/live/${CERTBOT_DOMAIN_SUFFIX}/fullchain.pem -text | grep DNS:
 # 
 # reference: https://eff-certbot.readthedocs.io/en/latest/using.html
-sudo certbot certonly --nginx --non-interactive --agree-tos -m ${CERTBOT_EMAIL} \
+certbot certonly --nginx --non-interactive --agree-tos -m ${CERTBOT_EMAIL} \
   --cert-name ${CERTBOT_DOMAIN_SUFFIX} \
   -d rpc.${CERTBOT_DOMAIN_SUFFIX} \
   -d bridge.${CERTBOT_DOMAIN_SUFFIX} \
   -d explorer.${CERTBOT_DOMAIN_SUFFIX}
+
+# 3. create the nginx config files for each subdomain
+cp configs/nginx/l2-rpc.conf.template /etc/nginx/sites-available/l2-rpc.conf
+cp configs/nginx/bridge.conf.template /etc/nginx/sites-available/bridge.conf
+cp configs/nginx/l2-explorer.conf.template /etc/nginx/sites-available/l2-explorer.conf
+
+# 4. replace ${CERTBOT_DOMAIN_SUFFIX} in the nginx config files
+sed -i 's/\${CERTBOT_DOMAIN_SUFFIX}/'"${CERTBOT_DOMAIN_SUFFIX}"'/g' /etc/nginx/sites-available/*.conf
+
+# 5. enable the nginx config files
+mkdir -p /etc/nginx/sites-enabled
+ln -s /etc/nginx/sites-available/l2-rpc.conf /etc/nginx/sites-enabled/
+ln -s /etc/nginx/sites-available/bridge.conf /etc/nginx/sites-enabled/
+ln -s /etc/nginx/sites-available/l2-explorer.conf /etc/nginx/sites-enabled/
