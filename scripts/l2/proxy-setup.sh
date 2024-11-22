@@ -63,6 +63,19 @@ sed -i 's/\${CERTBOT_DOMAIN_SUFFIX}/'"${CERTBOT_DOMAIN_SUFFIX}"'/g' /etc/nginx/s
 
 # 5. enable the nginx config files
 mkdir -p /etc/nginx/sites-enabled
-ln -s /etc/nginx/sites-available/l2-rpc.conf /etc/nginx/sites-enabled/
-ln -s /etc/nginx/sites-available/bridge.conf /etc/nginx/sites-enabled/
-ln -s /etc/nginx/sites-available/l2-explorer.conf /etc/nginx/sites-enabled/
+ln -sf /etc/nginx/sites-available/l2-rpc.conf /etc/nginx/sites-enabled/
+ln -sf /etc/nginx/sites-available/bridge.conf /etc/nginx/sites-enabled/
+ln -sf /etc/nginx/sites-available/l2-explorer.conf /etc/nginx/sites-enabled/
+
+# 6. verify the nginx config files
+nginx -t
+
+# 7. restart nginx
+#
+# after running this, you can check the status of nginx by:
+# systemctl status nginx
+# 
+# see logs
+# journalctl -u nginx.service -f
+systemctl start nginx
+systemctl enable nginx
