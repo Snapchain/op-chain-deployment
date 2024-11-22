@@ -1,3 +1,9 @@
+map $http_upgrade $connection_upgrade {
+
+  default upgrade;
+  ''      close;
+}
+
 server {
     listen 443 ssl;
     server_name rpc.${CERTBOT_DOMAIN_SUFFIX};
