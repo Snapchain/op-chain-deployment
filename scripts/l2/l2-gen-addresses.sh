@@ -11,11 +11,16 @@ output=$($WALLETS_SCRIPT)
 # Path to the .env file
 ENV_FILE="$(pwd)/.env"
 
+# Source the .env file
+source "$ENV_FILE"
+
 # Check if any addresses already exist in the .env file
 check_addresses_exist() {
   for role in ADMIN BATCHER PROPOSER; do
-    if grep -q "^GS_${role}_ADDRESS=." "$ENV_FILE" || \
-        grep -q "^GS_${role}_PRIVATE_KEY=." "$ENV_FILE"; then
+    address_var="GS_${role}_ADDRESS"
+    private_key_var="GS_${role}_PRIVATE_KEY"
+
+    if [[ -n "${!address_var}" ]] || [[ -n "${!private_key_var}" ]]; then
       return 0
     fi
   done
@@ -63,9 +68,6 @@ fund_address() {
     cast send --private-key "$L1_FUNDED_PRIVATE_KEY" --rpc-url "$L1_RPC_URL" \
         --value "$amount" "$address"
 }
-
-# Source the .env file
-source "$ENV_FILE"
 
 # Fund the generated addresses
 for role in ADMIN BATCHER PROPOSER; do
