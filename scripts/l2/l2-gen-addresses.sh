@@ -14,8 +14,8 @@ ENV_FILE="$(pwd)/.env"
 # Check if any addresses already exist in the .env file
 check_addresses_exist() {
   for role in ADMIN BATCHER PROPOSER; do
-    if grep -q "^GS_${role}_ADDRESS=" "$ENV_FILE" || \
-        grep -q "^GS_${role}_PRIVATE_KEY=" "$ENV_FILE"; then
+    if grep -q "^GS_${role}_ADDRESS=." "$ENV_FILE" || \
+        grep -q "^GS_${role}_PRIVATE_KEY=." "$ENV_FILE"; then
       return 0
     fi
   done
