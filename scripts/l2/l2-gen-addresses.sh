@@ -21,7 +21,6 @@ check_addresses_exist() {
     private_key_var="GS_${role}_PRIVATE_KEY"
     address="${!address_var}"
     private_key="${!private_key_var}"
-    echo "$role: address=$address, private_key=$private_key"
 
     if [[ -n "$address" ]] || [[ -n "$private_key" ]]; then
       return 0
@@ -71,6 +70,9 @@ fund_address() {
     cast send --private-key "$L1_FUNDED_PRIVATE_KEY" --rpc-url "$L1_RPC_URL" \
         --value "$amount" "$address"
 }
+
+# Update the .env file with the new addresses
+source "$ENV_FILE"
 
 # Fund the generated addresses
 for role in ADMIN BATCHER PROPOSER; do
