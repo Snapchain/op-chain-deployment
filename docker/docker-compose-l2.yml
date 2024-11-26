@@ -14,6 +14,7 @@ services:
       - "/entrypoint.sh"
     environment:
       GETH_MINER_RECOMMIT: 100ms
+    restart: unless-stopped
     networks:
       - ops-bedrock_default
 
@@ -45,6 +46,7 @@ services:
       - "${PWD}/.deploy/test-jwt-secret.txt:/config/jwt-secret.txt"
       - "${PWD}/.deploy/rollup.json:/rollup.json"
       - op_log:/op_log
+    restart: unless-stopped
     networks:
       - ops-bedrock_default
 
@@ -67,6 +69,7 @@ services:
       OP_PROPOSER_GAME_TYPE: "${DG_TYPE}"
       OP_PROPOSER_PROPOSAL_INTERVAL: "${PROPOSAL_INTERVAL}"
       OP_PROPOSER_RPC_ENABLE_ADMIN: "true"
+    restart: unless-stopped
     networks:
       - ops-bedrock_default
 
@@ -93,6 +96,7 @@ services:
       OP_BATCHER_TXMGR_MIN_TIP_CAP: 2.0 # 2 gwei, might need to tweak, depending on gas market
       OP_BATCHER_RESUBMISSION_TIMEOUT: 240s # wait 4 min before bumping fees
       OP_BATCHER_DATA_AVAILABILITY_TYPE: "blobs"
+    restart: unless-stopped
     networks:
       - ops-bedrock_default
 
