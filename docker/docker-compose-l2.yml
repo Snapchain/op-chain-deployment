@@ -41,6 +41,8 @@ services:
       --safedb.path=/db
     ports:
       - "7545:8545"
+    environment:
+      L1_RPC_KIND: "standard"
     volumes:
       - "safedb_data:/db"
       - "${PWD}/.deploy/test-jwt-secret.txt:/config/jwt-secret.txt"
