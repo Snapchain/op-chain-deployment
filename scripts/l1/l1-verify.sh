@@ -9,7 +9,10 @@ CL_PORT_START=$(yq '.port_publisher.cl.public_port_start' "$YAML_FILE")
 
 # Extract prefunded addresses
 PREFUNDED_ACCOUNTS=$(yq -r '.network_params.prefunded_accounts' "$YAML_FILE" | jq -r 'keys[]')
-readarray -t PREFUNDED_ACCOUNTS_ARRAY <<< "$PREFUNDED_ACCOUNTS"
+PREFUNDED_ACCOUNTS_ARRAY=()
+while IFS= read -r line; do
+    PREFUNDED_ACCOUNTS_ARRAY+=("$line")
+done <<< "$PREFUNDED_ACCOUNTS"
 
 # Calculate the actual ports
 L1_RPC_PORT=$((EL_PORT_START + 2))

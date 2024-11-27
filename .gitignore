@@ -5,3 +5,4 @@
 .deploy
 *wallet.json
 .DS_Store
+**/.env.bak*
