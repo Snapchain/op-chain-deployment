@@ -82,8 +82,14 @@ for role in ADMIN BATCHER PROPOSER; do
     if [[ -n "$address" ]]; then
         balance=$(check_address_balance "$address")
         if [[ "$balance" == "0" ]]; then
-            echo "Funding $role address: $address with amount $L1_FUND_AMOUNT"
-            fund_address "$address" "$L1_FUND_AMOUNT"
+            # fund 0.1 ETH for ADMIN, use L1_FUND_AMOUNT for BATCHER and PROPOSER
+            if [[ "$role" == "ADMIN" ]]; then
+                amount="0.1ether"
+            else
+                amount="$L1_FUND_AMOUNT"
+            fi
+            echo "Funding $role address: $address with amount $amount"
+            fund_address "$address" "$amount"
             echo
         else
             echo "Error: $role address already funded: $address"
