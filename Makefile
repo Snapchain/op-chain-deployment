@@ -55,10 +55,10 @@ l2-gen-addresses:
 
 ## Prepare for running the OP chain
 l2-prepare:
-	@$(eval export IMPL_SALT := $(shell openssl rand -hex 32))
-	@$(CURDIR)/scripts/l2/l2-generate-deploy-config.sh $(CURDIR)/optimism
-	@$(CURDIR)/scripts/l2/l2-deploy-l1-contracts.sh $(CURDIR)/optimism
-	@$(CURDIR)/scripts/l2/l2-generate-l2-config.sh $(CURDIR)/optimism $(CURDIR)/.deploy
+	$(eval export IMPL_SALT := $(shell openssl rand -hex 32))
+	$(CURDIR)/scripts/l2/l2-generate-deploy-config.sh $(CURDIR)/optimism
+	$(CURDIR)/scripts/l2/l2-deploy-l1-contracts.sh $(CURDIR)/optimism
+	$(CURDIR)/scripts/l2/l2-generate-l2-config.sh $(CURDIR)/optimism $(CURDIR)/.deploy
 .PHONY: l2-prepare
 
 ## Start the OP chain core components (op-node, op-geth, proposer, batcher)
