@@ -5,8 +5,8 @@ set -euo pipefail
 echo "Stopping and removing OP chain containers..."
 docker compose -f docker/docker-compose-l2.yml down
 
-# Remove the .deploy directory
-rm -rf "$(pwd)/.deploy"
+# Remove(Move) the .deploy directory
+sudo mv "$(pwd)/.deploy" "$(pwd)/.deploy-deprecated-$(date +%Y%m%d%H%M%S)"
 
 # Remove the op-chain-deployment volume
 echo "Removing the op-chain-deployment volume..."
