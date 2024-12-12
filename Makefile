@@ -96,9 +96,13 @@ l2-bridge-deploy-l1-multicall:
 	@$(CURDIR)/scripts/l2-bridge/l2-bridge-deploy-l1-multicall.sh
 .PHONY: l2-bridge-deploy-l1-multicall
 
+## Set the environment variables for the OP Bridge UI
+l2-bridge-set-env:
+	@$(CURDIR)/scripts/l2-bridge/l2-bridge-set-env.sh
+.PHONY: l2-bridge-set-env
+
 ## Launch the OP Bridge UI
 l2-bridge-start:
-	@$(CURDIR)/scripts/l2-bridge/l2-bridge-set-env.sh
 	@docker compose -f docker/docker-compose-l2.yml up -d op-bridge-ui
 .PHONY: l2-bridge-start
 
